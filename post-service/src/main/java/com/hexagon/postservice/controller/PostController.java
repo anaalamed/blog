@@ -3,6 +3,7 @@ package com.hexagon.postservice.controller;
 import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public Post getPostById(@PathVariable int id){
+    public ResponseEntity<?> getPostById(@PathVariable int id){
         return postService.getPostById(id);
     }
 }

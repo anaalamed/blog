@@ -18,4 +18,8 @@ public class AuthController {
         return authService.createUser(user);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable int id){
+        return authService.getUserById(id);
+    }
 }

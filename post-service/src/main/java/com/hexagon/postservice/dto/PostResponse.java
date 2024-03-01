@@ -1,6 +1,6 @@
-package com.hexagon.postservice.entity;
+package com.hexagon.postservice.dto;
 
-import jakarta.persistence.*;
+import com.hexagon.authservice.dto.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +12,10 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "post")
-public class Post {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class PostResponse {
     private int id;
     private String title;
     private String content;
     private Instant creationTime;
-    private int userId;
+    private UserResponse author;
 }
