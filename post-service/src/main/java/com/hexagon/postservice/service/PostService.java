@@ -5,13 +5,12 @@ import com.hexagon.postservice.dto.PostResponse;
 import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -21,21 +20,23 @@ public class PostService {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Post addPost(Post post){
-        return postRepository.save(post);
-    }
-    public List<Post> getPosts(){
-        return postRepository.findAll();
+    private static final String authServiceUrl = "http://AUTH-SERVICE/user/";
+
+    public PostResponse addPost(Post post) {
+        return getPostResponse(postRepository.save(post));
     }
 
-    public ResponseEntity<?> getPostById(int id){
-        Optional<Post> post = postRepository.findById(id);
-        if (post.isPresent()) {
-            UserResponse author = restTemplate.getForObject("http://AUTH-SERVICE/user/" + post.get().getUserId(), UserResponse.class);
-            PostResponse postResponse = new PostResponse(post.get().getId(), post.get().getTitle(), post.get().getContent(), post.get().getCreationTime(), author);
-            return new ResponseEntity<>(postResponse, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>("No Post Found",HttpStatus.NOT_FOUND);
-        }
+    public List<PostResponse> getPosts() {
+        List<Post> posts = postRepository.findAll();
+        return posts.stream().map(this::getPostResponse).collect(Collectors.toList());
+    }
+
+    public Optional<PostResponse> getPostById(int id) {
+        return postRepository.findById(id).map(this::getPostResponse);
+    }
+
+    private PostResponse getPostResponse(Post post) {
+        UserResponse author = restTemplate.getForObject(authServiceUrl + post.getUserId(), UserResponse.class);
+        return new PostResponse(post, author);
     }
 }
