@@ -1,7 +1,10 @@
 package com.hexagon.postservice.service;
 
+import com.hexagon.postservice.dto.PostRequest;
 import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.repository.PostRepository;
+import java.nio.file.AccessDeniedException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -15,8 +18,24 @@ public class PostService {
 
   @Autowired private PostRepository postRepository;
 
-  public Post addPost(Post post) {
+  public Post addPost(PostRequest postRequest, int authorId) {
+    Post post = new Post(postRequest, authorId);
+    post.setCreationTime(Instant.now());
     return postRepository.save(post);
+  }
+
+  public Post editPost(int postId, PostRequest postRequest, int authorId)
+      throws AccessDeniedException {
+    Post postToUpdate = postRepository.findById(postId).get();
+
+    if (postToUpdate.getUserId() != authorId) {
+      throw new AccessDeniedException("User can update only his own post");
+    }
+
+    postToUpdate.setTitle(postRequest.getTitle());
+    postToUpdate.setContent(postRequest.getContent());
+    postToUpdate.setUpdateTime(Instant.now());
+    return postRepository.save(postToUpdate);
   }
 
   public List<Post> getPosts() {

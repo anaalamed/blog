@@ -5,6 +5,7 @@ import com.hexagon.postservice.dto.PostRequest;
 import com.hexagon.postservice.dto.PostResponse;
 import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.service.PostService;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -29,10 +30,24 @@ public class PostController {
   @PostMapping("/addPost")
   public PostResponse addPost(@RequestBody PostRequest postRequest, @RequestHeader String token) {
     String getAuthorReqUrl = authServiceUrl + "?token=" + token;
-    UserResponse author = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class);
-    Post post = new Post(postRequest, author.getId());
+    int authorId = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class).getId();
 
-    return getPostResponse(postService.addPost(post));
+    return getPostResponse(postService.addPost(postRequest, authorId));
+  }
+
+  @PutMapping("/editPost/{postId}")
+  public ResponseEntity<?> editPost(
+      @RequestBody PostRequest postRequest, @RequestHeader String token, @PathVariable int postId) {
+    String getAuthorReqUrl = authServiceUrl + "?token=" + token;
+    int authorId = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class).getId();
+
+    try {
+      PostResponse postResponse =
+          getPostResponse(postService.editPost(postId, postRequest, authorId));
+      return ResponseEntity.ok(postResponse);
+    } catch (AccessDeniedException e) {
+      return ResponseEntity.badRequest().body(e);
+    }
   }
 
   @GetMapping

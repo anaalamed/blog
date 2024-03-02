@@ -20,12 +20,12 @@ public class Post {
   private String title;
   private String content;
   private Instant creationTime;
+  private Instant updateTime;
   private int userId;
 
   public Post(PostRequest postRequest, int authorId) {
     this.title = postRequest.getTitle();
     this.content = postRequest.getContent();
-    this.creationTime = postRequest.getCreationTime();
     this.userId = authorId;
   }
 }

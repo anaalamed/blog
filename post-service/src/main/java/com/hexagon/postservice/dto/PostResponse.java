@@ -14,17 +14,19 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostResponse {
-    private int id;
-    private String title;
-    private String content;
-    private Instant creationTime;
-    private UserResponse author;
+  private int id;
+  private String title;
+  private String content;
+  private Instant creationTime;
+  private Instant updateTime;
+  private UserResponse author;
 
-    public PostResponse(Post post, UserResponse author) {
-        this.id = post.getId();
-        this.title = post.getTitle();
-        this.content = post.getContent();
-        this.creationTime = post.getCreationTime();
-        this.author = author;
-    }
+  public PostResponse(Post post, UserResponse author) {
+    this.id = post.getId();
+    this.title = post.getTitle();
+    this.content = post.getContent();
+    this.creationTime = post.getCreationTime();
+    this.updateTime = post.getUpdateTime();
+    this.author = author;
+  }
 }
