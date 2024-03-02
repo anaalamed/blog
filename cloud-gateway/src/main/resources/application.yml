@@ -10,7 +10,7 @@ spring:
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/user/**
+            - Path=/auth/**
         - id: POST-SERVICE
           uri: lb://POST-SERVICE
           predicates:

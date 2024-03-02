@@ -1,26 +1,31 @@
 package com.hexagon.postservice.entity;
 
+import com.hexagon.postservice.dto.PostRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.Instant;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "post")
 public class Post {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private int id;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    private String title;
-    private String content;
-    private Instant creationTime;
-    private String author;
+  private String title;
+  private String content;
+  private Instant creationTime;
+  private Instant updateTime;
+  private int userId;
+
+  public Post(PostRequest postRequest, int authorId) {
+    this.title = postRequest.getTitle();
+    this.content = postRequest.getContent();
+    this.userId = authorId;
+  }
 }
