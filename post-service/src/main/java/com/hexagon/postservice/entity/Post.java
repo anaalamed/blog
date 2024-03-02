@@ -1,5 +1,6 @@
 package com.hexagon.postservice.entity;
 
+import com.hexagon.postservice.dto.PostRequest;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.*;
@@ -12,7 +13,6 @@ import lombok.*;
 @Entity
 @Table(name = "post")
 public class Post {
-
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
@@ -21,4 +21,11 @@ public class Post {
   private String content;
   private Instant creationTime;
   private int userId;
+
+  public Post(PostRequest postRequest, int authorId) {
+    this.title = postRequest.getTitle();
+    this.content = postRequest.getContent();
+    this.creationTime = postRequest.getCreationTime();
+    this.userId = authorId;
+  }
 }

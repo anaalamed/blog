@@ -1,6 +1,7 @@
 package com.hexagon.postservice.service;
 
 import com.hexagon.authservice.dto.UserResponse;
+import com.hexagon.postservice.dto.PostRequest;
 import com.hexagon.postservice.dto.PostResponse;
 import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.repository.PostRepository;
@@ -23,11 +24,13 @@ public class PostService {
 
   private static final String authServiceUrl = "http://AUTH-SERVICE/auth/user";
 
-  public PostResponse addPost(Post post, String token) {
+  public PostResponse addPost(PostRequest postRequest, String token) {
     String link = authServiceUrl + "?token=" + token;
-    UserResponse user = restTemplate.getForObject(link, UserResponse.class);
-    post.setUserId(user.getId());
-    return new PostResponse(postRepository.save(post), user);
+    UserResponse author = restTemplate.getForObject(link, UserResponse.class);
+
+    Post post = new Post(postRequest, author.getId());
+    Post savedPost = postRepository.save(post);
+    return getPostResponse(savedPost);
   }
 
   public List<PostResponse> getPosts() {
@@ -40,10 +43,11 @@ public class PostService {
     return postRepository.findById(id).map(this::getPostResponse);
   }
 
+  private UserResponse getPostAuthor(Post post) {
+    return restTemplate.getForObject(authServiceUrl + "/" + post.getUserId(), UserResponse.class);
+  }
+
   private PostResponse getPostResponse(Post post) {
-    logger.info(post);
-    UserResponse author =
-        restTemplate.getForObject(authServiceUrl + "/" + post.getUserId(), UserResponse.class);
-    return new PostResponse(post, author);
+    return new PostResponse(post, getPostAuthor(post));
   }
 }

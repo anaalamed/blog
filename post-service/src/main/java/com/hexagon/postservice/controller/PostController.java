@@ -1,7 +1,7 @@
 package com.hexagon.postservice.controller;
 
+import com.hexagon.postservice.dto.PostRequest;
 import com.hexagon.postservice.dto.PostResponse;
-import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.service.PostService;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +20,8 @@ public class PostController {
   @Autowired private PostService postService;
 
   @PostMapping("/addPost")
-  public PostResponse addPost(@RequestBody Post post, @RequestHeader String token) {
-    logger.info(token);
-    return postService.addPost(post, token);
+  public PostResponse addPost(@RequestBody PostRequest postRequest, @RequestHeader String token) {
+    return postService.addPost(postRequest, token);
   }
 
   @GetMapping
