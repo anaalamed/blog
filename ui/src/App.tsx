@@ -16,7 +16,7 @@ const headerStyle: React.CSSProperties = {
 
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
-  color: "#000",
+  color: "#3928BD",
   backgroundColor: "#fff",
 };
 

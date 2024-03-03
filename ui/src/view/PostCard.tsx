@@ -2,28 +2,36 @@ import React from "react";
 import { Card } from "antd";
 import { Post } from "../rest/PostRequests";
 
-const CardStyle = {
-  backgroundImage: "linear-gradient(180deg, #532ac6 0%, #1d1674 100%)",
-  color: "#fff",
+const cardStyle = {
+  backgroundColor: "#EBEAFB",
+  color: "#3928BD",
   textAlign: "start" as const,
   width: "80%",
 };
 
-const PostCard: React.FC<{ post: Post }> = ({ post }) => (
-  <Card
-    size="default"
-    title={post.title}
-    hoverable
-    extra={
-      <>
-        <a href="#">More</a>
-        <div>{post.author.name}</div>
-      </>
-    }
-    style={CardStyle}
-  >
-    <p>{post.content}</p>
-  </Card>
-);
+const titleStyle = {
+  backgroundColor: "#5c6cfa",
+  color: "#fff",
+};
+
+const PostCard: React.FC<{ post: Post }> = ({ post }) => {
+  return (
+    <Card
+      size="default"
+      headStyle={titleStyle}
+      title={post.title}
+      hoverable
+      extra={
+        <div style={titleStyle}>
+          <div>{post.author.name}</div>
+          <div>{post.creationTime.toLocaleString()}</div>
+        </div>
+      }
+      style={cardStyle}
+    >
+      <p>{post.content}</p>
+    </Card>
+  );
+};
 
 export default PostCard;
