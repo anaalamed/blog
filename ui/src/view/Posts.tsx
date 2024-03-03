@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Flex } from "antd";
 import { getAllPosts } from "../rest/PostRequests";
-import { Post } from "../rest/PostRequests";
+import { Post } from "../rest/common";
 import PostCard from "./PostCard";
 
 const Posts: React.FC = () => {

@@ -23,7 +23,7 @@ public class CommentResponse {
     this.id = comment.getId();
     this.content = comment.getContent();
     this.creationTime = comment.getCreationTime().toEpochMilli();
-    this.updateTime = comment.getUpdateTime().toEpochMilli();
+    //    this.updateTime = comment.getUpdateTime().toEpochMilli();
     this.author = author;
     this.postId = comment.getPostId();
   }

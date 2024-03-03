@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Flex } from "antd";
 import { getPostById } from "../rest/PostRequests";
-import { Post } from "../rest/PostRequests";
+import { Post, Comment } from "../rest/common";
 import PostCard from "./PostCard";
 import { useParams } from "react-router-dom";
+import { getAllCommentsByPostId } from "../rest/CommentRequests";
+import Comments from "./Comments";
 
 const PostPage: React.FC = () => {
   const [post, setPost] = useState<Post>();
+  const [comments, setComments] = useState<Comment[]>([]);
   const { postId } = useParams();
 
   useEffect(() => {
     async function getPost(postId: string) {
       const post = await getPostById(postId);
       setPost(post);
+
+      const comments = await getAllCommentsByPostId(postId);
+      setComments(comments);
+      console.log(comments);
     }
     getPost(postId || "");
   }, [postId]);
@@ -23,7 +30,7 @@ const PostPage: React.FC = () => {
       <Flex vertical gap="middle" justify="center" align="center">
         {post !== undefined ? <PostCard post={post} /> : null}
 
-        <h3>Comments</h3>
+        <Comments comments={comments} />
       </Flex>
     </>
   );

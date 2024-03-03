@@ -24,7 +24,7 @@ public class PostResponse {
     this.title = post.getTitle();
     this.content = post.getContent();
     this.creationTime = post.getCreationTime().toEpochMilli();
-    this.updateTime = post.getUpdateTime().toEpochMilli();
+    //    this.updateTime = post.getUpdateTime().toEpochMilli();
     this.author = author;
   }
 }

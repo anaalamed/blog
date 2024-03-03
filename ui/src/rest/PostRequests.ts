@@ -1,20 +1,6 @@
-const baseUrl = "http://localhost:8080";
+import { Post, baseUrl } from "./common";
+
 const postUrl = baseUrl.concat("/post");
-
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-export type Post = {
-  id: number;
-  title: string;
-  content: string;
-  creationTime: Date;
-  updateTime: Date;
-  author: User;
-};
 
 export const getAllPosts = async (): Promise<Post[]> => {
   try {
