@@ -6,6 +6,15 @@ spring:
     name: API-GATEWAY
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: '*'
+            allowedHeaders: '*'
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
       routes:
         - id: AUTH-SERVICE
           uri: lb://AUTH-SERVICE
@@ -19,6 +28,7 @@ spring:
           uri: lb://COMMENT-SERVICE
           predicates:
             - Path=/comment/**
+
 
 eureka:
   client:

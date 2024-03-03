@@ -1,6 +1,7 @@
 import React from "react";
 import { Layout } from "antd";
 import { GlobalStyles } from "./styles/global";
+import Posts from "./view/Posts";
 
 const { Header, Footer, Content } = Layout;
 
@@ -10,13 +11,11 @@ const headerStyle: React.CSSProperties = {
   height: 64,
   paddingInline: 48,
   lineHeight: "64px",
-  backgroundImage: "linear-gradient(180deg, #532ac6 0%, #1d1674 100%)",
+  backgroundColor: "#1d1674",
 };
 
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
-  minHeight: 120,
-  lineHeight: "120px",
   color: "#000",
   backgroundColor: "#fff",
 };
@@ -24,7 +23,7 @@ const contentStyle: React.CSSProperties = {
 const footerStyle: React.CSSProperties = {
   textAlign: "center",
   color: "#fff",
-  backgroundImage: "linear-gradient(180deg, #532ac6 0%, #1d1674 100%)",
+  backgroundColor: "#1d1674",
 };
 
 const layoutStyle = {
@@ -36,7 +35,9 @@ const layoutStyle = {
 const App: React.FC = () => (
   <Layout style={layoutStyle}>
     <Header style={headerStyle}>Header</Header>
-    <Content style={contentStyle}>Content</Content>
+    <Content style={contentStyle}>
+      <Posts />
+    </Content>
     <Footer style={footerStyle}>Footer</Footer>
 
     <GlobalStyles />
