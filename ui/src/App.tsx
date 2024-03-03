@@ -2,6 +2,8 @@ import React from "react";
 import { Layout } from "antd";
 import { GlobalStyles } from "./styles/global";
 import Posts from "./view/Posts";
+import { Route, Routes } from "react-router-dom";
+import PostPage from "./view/PostPage";
 
 const { Header, Footer, Content } = Layout;
 
@@ -36,7 +38,10 @@ const App: React.FC = () => (
   <Layout style={layoutStyle}>
     <Header style={headerStyle}>Header</Header>
     <Content style={contentStyle}>
-      <Posts />
+      <Routes>
+        <Route path="/" element={<Posts />} />
+        <Route path="/post/:postId" element={<PostPage />} />
+      </Routes>
     </Content>
     <Footer style={footerStyle}>Footer</Footer>
 

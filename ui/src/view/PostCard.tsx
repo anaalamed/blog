@@ -1,6 +1,7 @@
 import React from "react";
-import { Card } from "antd";
+import { Card, Button } from "antd";
 import { Post } from "../rest/PostRequests";
+import { Link, useLocation } from "react-router-dom";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",
@@ -14,7 +15,15 @@ const titleStyle = {
   color: "#fff",
 };
 
+const buttonStyle = {
+  backgroundColor: "#B0FD75",
+  color: "#1E1C57",
+  fontWeight: "bold",
+};
+
 const PostCard: React.FC<{ post: Post }> = ({ post }) => {
+  const location = useLocation();
+
   return (
     <Card
       size="default"
@@ -30,6 +39,11 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
       style={cardStyle}
     >
       <p>{post.content}</p>
+      {location.pathname.includes("post/") ? null : (
+        <Link to={`post/${post.id}`}>
+          <Button style={buttonStyle}>Read More</Button>
+        </Link>
+      )}
     </Card>
   );
 };
