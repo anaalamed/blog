@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex } from "antd";
-import { Comment } from "../rest/common";
+import { Comment } from "../../../rest/common";
 import CommentCard from "./CommentCard";
 
 const Posts: React.FC<{ comments: Comment[] }> = ({ comments }) => {

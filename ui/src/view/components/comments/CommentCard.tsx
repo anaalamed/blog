@@ -1,6 +1,6 @@
 import React from "react";
 import { Card } from "antd";
-import { Comment } from "../rest/common";
+import { Comment } from "../../../rest/common";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",

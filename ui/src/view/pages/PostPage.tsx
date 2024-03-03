@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Flex } from "antd";
-import { getPostById } from "../rest/PostRequests";
-import { Post, Comment } from "../rest/common";
-import PostCard from "./PostCard";
+import { getPostById } from "../../rest/PostRequests";
+import { Post, Comment } from "../../rest/common";
+import PostCard from "../components/posts/PostCard";
 import { useParams } from "react-router-dom";
-import { getAllCommentsByPostId } from "../rest/CommentRequests";
-import Comments from "./Comments";
+import { getAllCommentsByPostId } from "../../rest/CommentRequests";
+import Comments from "../components/comments/Comments";
 
 const PostPage: React.FC = () => {
   const [post, setPost] = useState<Post>();

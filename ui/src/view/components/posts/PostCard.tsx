@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button } from "antd";
-import { Post } from "../rest/common";
+import { Post } from "../../../rest/common";
 import { Link, useLocation } from "react-router-dom";
 
 const cardStyle = {
