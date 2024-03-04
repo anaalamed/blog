@@ -2,6 +2,7 @@ import React, { createContext, useContext } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
+import { Post } from "./rest/common";
 
 export type GlobalContent = {
   token: string;
@@ -10,6 +11,8 @@ export type GlobalContent = {
   setIsLoggedIn: (c: boolean) => void;
   userName: string;
   setUserName: (c: string) => void;
+  posts: Post[];
+  setPosts: (c: Post[]) => void;
 };
 
 export const MyGlobalContext = createContext<GlobalContent>({
@@ -19,6 +22,8 @@ export const MyGlobalContext = createContext<GlobalContent>({
   setIsLoggedIn: () => {},
   userName: "",
   setUserName: () => {},
+  posts: [],
+  setPosts: () => {},
 });
 
 export const useGlobalContext = () => useContext(MyGlobalContext);

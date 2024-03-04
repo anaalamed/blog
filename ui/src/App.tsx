@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
 import { GlobalStyles } from "./styles/global";
 import { Route, Routes } from "react-router-dom";
@@ -8,6 +8,8 @@ import Topbar from "./view/components/Topbar";
 import FooterView from "./view/components/Footer";
 import AuthPage from "./view/pages/AuthPage";
 import { MyGlobalContext } from ".";
+import { Post } from "./rest/common";
+import { getAllPosts } from "./rest/PostRequests";
 
 const { Header, Footer, Content } = Layout;
 
@@ -42,6 +44,15 @@ const App: React.FC = () => {
   const [token, setToken] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>("");
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    async function getPosts() {
+      const posts = await getAllPosts();
+      setPosts(posts);
+    }
+    getPosts();
+  }, []);
 
   return (
     <Layout style={layoutStyle}>
@@ -53,6 +64,8 @@ const App: React.FC = () => {
           setIsLoggedIn,
           userName,
           setUserName,
+          posts,
+          setPosts,
         }}
       >
         <Header style={headerStyle}>

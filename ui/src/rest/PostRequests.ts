@@ -25,6 +25,30 @@ export const getPostById = async (postId: string): Promise<Post> => {
   }
 };
 
+export const createPost = async (data: any, token: string): Promise<Post> => {
+  try {
+    const res = await fetch(postUrl.concat("/addPost"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        charset: "utf-8",
+        token: token,
+      },
+      body: JSON.stringify({ title: data.title, content: data.content }),
+    });
+    if (res.ok) {
+      console.log("New Post was created ");
+      const postRes: any = await res.json();
+      return createPostFromResponse(postRes);
+    } else {
+      console.error("Create post failed: ", res.statusText);
+      throw new Error();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const createPostFromResponse = (postResponse: any): Post => {
   return {
     id: postResponse.id,

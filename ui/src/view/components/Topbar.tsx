@@ -2,6 +2,7 @@ import { Flex } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../..";
+import ModalAddPost from "./posts/ModalAddPost";
 
 const linkStyle = { color: "#fff", fontWeight: "bold" };
 
@@ -15,7 +16,10 @@ const Topbar: React.FC = () => {
       </Link>
 
       {isLoggedIn ? (
-        <div>Hey, {userName}</div>
+        <Flex justify="space-between" align="center" gap={16}>
+          <ModalAddPost />
+          <div>Hey, {userName}</div>
+        </Flex>
       ) : (
         <Flex justify="space-between" gap={16}>
           <Link style={linkStyle} to="/signup">

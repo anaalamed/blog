@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Flex } from "antd";
-import { getAllPosts } from "../../../rest/PostRequests";
 import { Post } from "../../../rest/common";
 import PostCard from "./PostCard";
+import { useGlobalContext } from "../../..";
 
 const Posts: React.FC = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    async function getRepos() {
-      const posts = await getAllPosts();
-      setPosts(posts);
-    }
-    getRepos();
-  }, []);
+  const { posts } = useGlobalContext();
+  console.log(posts);
 
   return (
     <>
