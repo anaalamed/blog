@@ -6,11 +6,13 @@ import PostCard from "../components/posts/PostCard";
 import { useParams } from "react-router-dom";
 import { getAllCommentsByPostId } from "../../rest/CommentRequests";
 import Comments from "../components/comments/Comments";
+import CommentModal from "../components/comments/CommentModal";
+import { useGlobalContext } from "../../state/state";
 
 const PostPage: React.FC = () => {
   const [post, setPost] = useState<Post>();
-  const [comments, setComments] = useState<Comment[]>([]);
   const { postId } = useParams();
+  const { isLoggedIn, comments, setComments } = useGlobalContext();
 
   useEffect(() => {
     async function getPost(postId: string) {
@@ -29,6 +31,8 @@ const PostPage: React.FC = () => {
       <h3>Post Page</h3>
       <Flex vertical gap="middle" justify="center" align="center">
         {post !== undefined ? <PostCard post={post} /> : null}
+
+        {isLoggedIn ? <CommentModal /> : null}
 
         <Comments comments={comments} />
       </Flex>

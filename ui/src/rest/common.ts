@@ -22,4 +22,5 @@ export type Comment = {
   creationTime: Date;
   updateTime: Date;
   author: User;
+  postId: number;
 };

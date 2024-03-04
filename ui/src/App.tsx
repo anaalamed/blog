@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Layout } from "antd";
 import { GlobalStyles } from "./styles/global";
 import { Route, Routes } from "react-router-dom";
@@ -8,9 +8,7 @@ import Topbar from "./view/components/Topbar";
 import FooterView from "./view/components/Footer";
 import AuthPage from "./view/pages/AuthPage";
 import { MyGlobalContext } from "./state/state";
-import { Post, User } from "./rest/common";
-import { getAllPosts } from "./rest/PostRequests";
-
+import { Post, User, Comment } from "./rest/common";
 const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -26,6 +24,7 @@ const contentStyle: React.CSSProperties = {
   textAlign: "center",
   color: "#3928BD",
   backgroundColor: "#fff",
+  padding: "2rem 0",
 };
 
 const footerStyle: React.CSSProperties = {
@@ -44,6 +43,7 @@ const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User>();
   const [posts, setPosts] = useState<Post[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   return (
     <Layout style={layoutStyle}>
@@ -51,10 +51,12 @@ const App: React.FC = () => {
         value={{
           isLoggedIn,
           setIsLoggedIn,
-          posts,
-          setPosts,
           user,
           setUser,
+          posts,
+          setPosts,
+          comments,
+          setComments,
         }}
       >
         <Header style={headerStyle}>

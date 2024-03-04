@@ -37,6 +37,6 @@ public class CommentService {
   }
 
   public List<Comment> getCommentsByPostId(int postId) {
-    return commentRepository.findAllByPostId(postId);
+    return commentRepository.findAllByPostIdOrderByCreationTimeDesc(postId);
   }
 }

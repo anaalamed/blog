@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { Button, Modal, type FormInstance } from "antd";
 import { buttonStyle } from "../../../styles/global";
-import { createPost, updatePost } from "../../../rest/PostRequests";
 import { useGlobalContext } from "../../../state/state";
-import PostForm, { PostValues } from "./PostModalForm";
-import { Post } from "../../../rest/common";
+import CommentForm, { CommentValues } from "./CommentModalForm";
+import { Comment } from "../../../rest/common";
+import { createComment, updateComment } from "../../../rest/CommentRequests";
+import { useParams } from "react-router-dom";
 
-interface PostCreateFormModalProps {
+interface CommentFormModalProps {
   open: boolean;
-  onCreate: (values: PostValues) => void;
+  onCreate: (values: CommentValues) => void;
   onCancel: () => void;
-  initialValues: PostValues;
+  initialValues: CommentValues;
   isNew: boolean;
 }
 
-const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
+const CommentFormModal: React.FC<CommentFormModalProps> = ({
   open,
   onCreate,
   onCancel,
@@ -22,9 +23,9 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   isNew,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
-  const { posts, setPosts, user } = useGlobalContext();
+  const { comments, setComments, user } = useGlobalContext();
 
-  const title = isNew ? "Create a new post" : "Update the post";
+  const title = isNew ? "Create a new comment" : "Update the comment";
   const okText = isNew ? "Create" : "Update";
 
   return (
@@ -42,27 +43,31 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
           formInstance?.resetFields();
           onCreate(values);
           if (isNew) {
-            const newPost = await createPost(values, user?.token || "");
-            posts.unshift(newPost);
+            const newComment = await createComment(
+              values,
+              user?.token || "",
+              initialValues.postId
+            );
+            comments.unshift(newComment);
           } else {
-            const updatedPost = await updatePost(
+            const updatedComment = await updateComment(
               values,
               user?.token || "",
               initialValues.id
             );
-            const updatedPostIndex = posts.findIndex(
-              (e) => e.id === updatedPost.id
+            const updatedCommentIndex = comments.findIndex(
+              (e) => e.id === updatedComment.id
             );
-            posts[updatedPostIndex] = updatedPost;
+            comments[updatedCommentIndex] = updatedComment;
           }
-          const newPosts: Post[] = [...posts];
-          setPosts(newPosts);
+          const newComments: Comment[] = [...comments];
+          setComments(newComments);
         } catch (error) {
           console.log("Failed:", error);
         }
       }}
     >
-      <PostForm
+      <CommentForm
         initialValues={initialValues}
         onFormInstanceReady={(instance) => {
           setFormInstance(instance);
@@ -72,20 +77,21 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   );
 };
 
-const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
-  const [formValues, setFormValues] = useState<PostValues>();
+const ModalComment: React.FC<{ comment?: Comment }> = ({ comment }) => {
+  const [formValues, setFormValues] = useState<CommentValues>();
   const [open, setOpen] = useState(false);
+  const { postId } = useParams();
 
-  const onCreate = (values: PostValues) => {
+  const onCreate = (values: CommentValues) => {
     console.log("Received values of form: ", values);
     setFormValues(values);
     setOpen(false);
   };
 
-  const title = post ? "Update" : "New Post";
-  const initialValues = post
-    ? { title: post.title, content: post.content, id: post.id }
-    : { title: "", content: "" };
+  const title = comment ? "Update" : "New Comment";
+  const initialValues = comment
+    ? { content: comment.content, id: comment.id, postId: comment.postId }
+    : { content: "", postId: postId };
 
   return (
     <>
@@ -93,15 +99,15 @@ const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
         {title}
       </Button>
       {/* <pre>{JSON.stringify(formValues, null, 2)}</pre> */}
-      <PostCreateFormModal
+      <CommentFormModal
         open={open}
         onCreate={onCreate}
         onCancel={() => setOpen(false)}
         initialValues={initialValues}
-        isNew={post ? false : true}
+        isNew={comment ? false : true}
       />
     </>
   );
 };
 
-export default ModalPost;
+export default ModalComment;
