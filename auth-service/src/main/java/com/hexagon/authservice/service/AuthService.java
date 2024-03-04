@@ -1,5 +1,6 @@
 package com.hexagon.authservice.service;
 
+import com.hexagon.authservice.dto.LoginResponse;
 import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.authservice.model.User;
 import com.hexagon.authservice.repository.UserRepository;
@@ -24,13 +25,13 @@ public class AuthService {
     return userRepository.save(user);
   }
 
-  public Optional<String> login(String email, String password) {
+  public Optional<LoginResponse> login(String email, String password) {
     Optional<User> user = userRepository.findByEmail(email);
 
     if (user.isPresent() && password.equals(user.get().getPassword())) {
       String token = generateUniqueToken();
       tokens.put(user.get().getId(), token);
-      return Optional.of(token);
+      return Optional.of(new LoginResponse(token, new UserResponse(user.get())));
     }
 
     return Optional.empty();

@@ -1,8 +1,10 @@
 import React from "react";
-import { Card, Button } from "antd";
+import { Card, Button, Flex } from "antd";
 import { Post } from "../../../rest/common";
 import { Link, useLocation } from "react-router-dom";
 import { buttonStyle } from "../../../styles/global";
+import ModalPost from "./PostModal";
+import { useGlobalContext } from "../../../state/state";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",
@@ -18,6 +20,7 @@ const titleStyle = {
 
 const PostCard: React.FC<{ post: Post }> = ({ post }) => {
   const location = useLocation();
+  const { isLoggedIn, user } = useGlobalContext();
 
   return (
     <Card
@@ -35,9 +38,17 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
     >
       <p>{post.content}</p>
       {location.pathname.includes("post/") ? null : (
-        <Link to={`post/${post.id}`}>
-          <Button style={buttonStyle}>Read More</Button>
-        </Link>
+        <>
+          <Flex justify="space-between" gap={10}>
+            <Link to={`post/${post.id}`}>
+              <Button style={buttonStyle}>Read More</Button>
+            </Link>
+
+            {isLoggedIn && user?.id === post.author.id ? (
+              <ModalPost post={post} />
+            ) : null}
+          </Flex>
+        </>
       )}
     </Card>
   );

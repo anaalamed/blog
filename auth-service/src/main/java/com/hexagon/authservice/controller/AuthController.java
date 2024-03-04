@@ -1,6 +1,5 @@
 package com.hexagon.authservice.controller;
 
-import com.hexagon.authservice.dto.Token;
 import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.authservice.model.User;
 import com.hexagon.authservice.service.AuthService;
@@ -45,8 +44,7 @@ public class AuthController {
       return ResponseEntity.badRequest().body("Invalid inputs");
     }
 
-    Optional<String> token = authService.login(user.getEmail(), user.getPassword());
-    return ResponseEntity.of(token.map(Token::new));
+    return ResponseEntity.of(authService.login(user.getEmail(), user.getPassword()));
   }
 
   @RequestMapping(method = RequestMethod.GET, path = "/user")

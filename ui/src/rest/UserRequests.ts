@@ -2,7 +2,12 @@ import { User, baseUrl } from "./common";
 
 const authUrl = baseUrl.concat("/auth");
 
-export const login = async (data: any): Promise<string> => {
+export interface LoginResponse {
+  token: string;
+  userResponse: User;
+}
+
+export const login = async (data: any): Promise<LoginResponse> => {
   try {
     const res = await fetch(authUrl.concat("/login"), {
       method: "POST",
@@ -12,8 +17,7 @@ export const login = async (data: any): Promise<string> => {
       },
       body: JSON.stringify({ email: data.email, password: data.password }),
     });
-    const resData: any = await res.json();
-    return resData.token;
+    return await res.json();
   } catch (e) {
     console.log("Error occured during fetching posts: ", e);
     throw e;
