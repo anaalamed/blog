@@ -50,10 +50,13 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
               user?.token || "",
               initialValues.id
             );
-            posts.unshift(updatedPost);
+            const updatedPostIndex = posts.findIndex(
+              (e) => e.id === updatedPost.id
+            );
+            posts[updatedPostIndex] = updatedPost;
           }
-          setPosts(posts);
-          console.log(posts);
+          const newPosts: Post[] = [...posts];
+          setPosts(newPosts);
         } catch (error) {
           console.log("Failed:", error);
         }

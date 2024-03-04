@@ -41,8 +41,8 @@ export const createPost = async (
       body: JSON.stringify({ title: data.title, content: data.content }),
     });
     if (res.ok) {
-      console.log("New Post was created ");
       const postRes: any = await res.json();
+      console.log("New Post was created: ", postRes);
       return createPostFromResponse(postRes);
     } else {
       console.error("Create post failed: ", res.statusText);
@@ -70,8 +70,8 @@ export const updatePost = async (
       body: JSON.stringify({ title: data.title, content: data.content }),
     });
     if (res.ok) {
-      console.log("The Post was updated ");
       const postRes: any = await res.json();
+      console.log("The Post was updated: ", postRes);
       return createPostFromResponse(postRes);
     } else {
       console.error("Update post failed: ", res.statusText);

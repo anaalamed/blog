@@ -45,14 +45,6 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User>();
   const [posts, setPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
-    async function getPosts() {
-      const posts = await getAllPosts();
-      setPosts(posts);
-    }
-    getPosts();
-  }, []);
-
   return (
     <Layout style={layoutStyle}>
       <MyGlobalContext.Provider

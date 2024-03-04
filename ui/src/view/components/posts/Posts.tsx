@@ -6,7 +6,6 @@ import { useGlobalContext } from "../../../state/state";
 
 const Posts: React.FC = () => {
   const { posts } = useGlobalContext();
-  console.log(posts);
 
   return (
     <>
