@@ -14,7 +14,7 @@ const cardStyle = {
 };
 
 const titleStyle = {
-  backgroundColor: "#5c6cfa",
+  backgroundImage: "linear-gradient(180deg, #3d2ac6 0%, #1d1674 100%)",
   color: "#fff",
 };
 
@@ -30,8 +30,15 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
       hoverable
       extra={
         <div style={titleStyle}>
-          <div>{post.author.name}</div>
-          <div>{post.creationTime.toLocaleString()}</div>
+          <Flex align="center" gap={10}>
+            <div>
+              <div>{post.author.name}</div>
+              <div>{post.creationTime.toLocaleString()}</div>
+            </div>
+            {isLoggedIn && user?.id === post.author.id ? (
+              <ModalPost post={post} />
+            ) : null}
+          </Flex>
         </div>
       }
       style={cardStyle}
@@ -43,10 +50,6 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
             <Link to={`post/${post.id}`}>
               <Button style={buttonStyle}>Read More</Button>
             </Link>
-
-            {isLoggedIn && user?.id === post.author.id ? (
-              <ModalPost post={post} />
-            ) : null}
           </Flex>
         </>
       )}

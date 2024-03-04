@@ -1,6 +1,8 @@
 import React from "react";
-import { Card } from "antd";
+import { Card, Flex } from "antd";
 import { Comment } from "../../../rest/common";
+import CommentModal from "./CommentModal";
+import { useGlobalContext } from "../../../state/state";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",
@@ -14,7 +16,8 @@ const titleStyle = {
   color: "#fff",
 };
 
-const PostCard: React.FC<{ comment: Comment }> = ({ comment }) => {
+const CommentCard: React.FC<{ comment: Comment }> = ({ comment }) => {
+  const { isLoggedIn, user } = useGlobalContext();
   return (
     <Card
       title={comment.author.name}
@@ -23,9 +26,12 @@ const PostCard: React.FC<{ comment: Comment }> = ({ comment }) => {
       headStyle={titleStyle}
       hoverable
       extra={
-        <div style={titleStyle}>
+        <Flex style={titleStyle} gap={10}>
           <div>{comment.creationTime.toLocaleString()}</div>
-        </div>
+          {isLoggedIn && user?.id === comment.author.id ? (
+            <CommentModal comment={comment} />
+          ) : null}
+        </Flex>
       }
     >
       {comment.content}
@@ -33,4 +39,4 @@ const PostCard: React.FC<{ comment: Comment }> = ({ comment }) => {
   );
 };
 
-export default PostCard;
+export default CommentCard;

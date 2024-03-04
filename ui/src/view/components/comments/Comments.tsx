@@ -1,19 +1,26 @@
 import React from "react";
-import { Flex } from "antd";
+import { Divider, Flex } from "antd";
 import { Comment } from "../../../rest/common";
 import CommentCard from "./CommentCard";
+import { useGlobalContext } from "../../../state/state";
+import CommentModal from "./CommentModal";
 
-const Posts: React.FC<{ comments: Comment[] }> = ({ comments }) => {
+const Comments: React.FC<{ comments: Comment[] }> = ({ comments }) => {
+  const { isLoggedIn } = useGlobalContext();
   return (
-    <>
-      <h3>Comments</h3>
+    <div style={{ width: "100%" }}>
+      <h3>{comments.length ? "Comments" : "No comments yet..."}</h3>
+
+      {isLoggedIn ? <CommentModal /> : null}
+      <Divider />
+
       <Flex vertical gap="middle" justify="center" align="center">
         {comments.map((comment: Comment) => (
           <CommentCard key={comment.id} comment={comment} />
         ))}
       </Flex>
-    </>
+    </div>
   );
 };
 
-export default Posts;
+export default Comments;

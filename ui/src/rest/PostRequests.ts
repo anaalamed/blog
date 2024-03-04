@@ -1,4 +1,4 @@
-import { Values } from "../view/components/posts/PostModalForm";
+import { PostValues } from "../view/components/posts/PostModalForm";
 import { Post, baseUrl } from "./common";
 
 const postUrl = baseUrl.concat("/post");
@@ -27,7 +27,7 @@ export const getPostById = async (postId: string): Promise<Post> => {
 };
 
 export const createPost = async (
-  data: Values,
+  data: PostValues,
   token: string
 ): Promise<Post> => {
   try {
@@ -54,7 +54,7 @@ export const createPost = async (
 };
 
 export const updatePost = async (
-  data: Values,
+  data: PostValues,
   token: string,
   postId: any
 ): Promise<Post> => {

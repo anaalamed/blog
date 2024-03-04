@@ -2,15 +2,15 @@ import React, { useEffect } from "react";
 import { Form, Input, type FormInstance } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
-export interface Values {
+export interface PostValues {
   title?: string;
   content?: string;
   id?: number;
 }
 
 interface PostCreateFormProps {
-  initialValues: Values;
-  onFormInstanceReady: (instance: FormInstance<Values>) => void;
+  initialValues: PostValues;
+  onFormInstanceReady: (instance: FormInstance<PostValues>) => void;
 }
 
 const PostForm: React.FC<PostCreateFormProps> = ({
