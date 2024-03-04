@@ -4,7 +4,7 @@ import { Post } from "../../../rest/common";
 import { Link, useLocation } from "react-router-dom";
 import { buttonStyle } from "../../../styles/global";
 import ModalPost from "./PostModal";
-import { useGlobalContext } from "../../..";
+import { useGlobalContext } from "../../../state/state";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",
@@ -20,7 +20,7 @@ const titleStyle = {
 
 const PostCard: React.FC<{ post: Post }> = ({ post }) => {
   const location = useLocation();
-  const { isLoggedIn } = useGlobalContext();
+  const { isLoggedIn, user } = useGlobalContext();
 
   return (
     <Card
@@ -44,7 +44,9 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
               <Button style={buttonStyle}>Read More</Button>
             </Link>
 
-            {isLoggedIn ? <ModalPost post={post} /> : null}
+            {isLoggedIn && user?.id === post.author.id ? (
+              <ModalPost post={post} />
+            ) : null}
           </Flex>
         </>
       )}

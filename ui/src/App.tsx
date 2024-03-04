@@ -7,8 +7,8 @@ import HomePage from "./view/pages/HomePage";
 import Topbar from "./view/components/Topbar";
 import FooterView from "./view/components/Footer";
 import AuthPage from "./view/pages/AuthPage";
-import { MyGlobalContext } from ".";
-import { Post } from "./rest/common";
+import { MyGlobalContext } from "./state/state";
+import { Post, User } from "./rest/common";
 import { getAllPosts } from "./rest/PostRequests";
 
 const { Header, Footer, Content } = Layout;
@@ -41,9 +41,8 @@ const layoutStyle = {
 };
 
 const App: React.FC = () => {
-  const [token, setToken] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>("");
+  const [user, setUser] = useState<User>();
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
@@ -58,14 +57,12 @@ const App: React.FC = () => {
     <Layout style={layoutStyle}>
       <MyGlobalContext.Provider
         value={{
-          token,
-          setToken,
           isLoggedIn,
           setIsLoggedIn,
-          userName,
-          setUserName,
           posts,
           setPosts,
+          user,
+          setUser,
         }}
       >
         <Header style={headerStyle}>

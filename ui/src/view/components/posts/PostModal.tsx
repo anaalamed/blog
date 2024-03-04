@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Modal, type FormInstance } from "antd";
 import { buttonStyle } from "../../../styles/global";
 import { createPost, updatePost } from "../../../rest/PostRequests";
-import { useGlobalContext } from "../../..";
+import { useGlobalContext } from "../../../state/state";
 import PostForm, { Values } from "./PostModalForm";
 import { Post } from "../../../rest/common";
 
@@ -22,7 +22,7 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   isNew,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
-  const { token, posts, setPosts } = useGlobalContext();
+  const { posts, setPosts, user } = useGlobalContext();
 
   const title = isNew ? "Create a new post" : "Update the post";
   const okText = isNew ? "Create" : "Update";
@@ -42,12 +42,12 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
           formInstance?.resetFields();
           onCreate(values);
           if (isNew) {
-            const newPost = await createPost(values, token);
+            const newPost = await createPost(values, user?.token || "");
             posts.unshift(newPost);
           } else {
             const updatedPost = await updatePost(
               values,
-              token,
+              user?.token || "",
               initialValues.id
             );
             posts.unshift(updatedPost);

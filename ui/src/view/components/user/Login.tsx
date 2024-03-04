@@ -2,8 +2,9 @@ import React from "react";
 import { Button, Checkbox, Form, Input } from "antd";
 import { login } from "../../../rest/UserRequests";
 import { buttonStyle } from "../../../styles/global";
-import { useGlobalContext } from "../../..";
+import { useGlobalContext } from "../../../state/state";
 import { useNavigate } from "react-router-dom";
+import { User } from "../../../rest/common";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -16,14 +17,19 @@ type FieldType = {
 };
 
 const Login: React.FC = () => {
-  const { setToken, setIsLoggedIn, setUserName } = useGlobalContext();
+  const { setIsLoggedIn, setUser } = useGlobalContext();
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
     try {
       const loginResponse = await login(values);
-      setToken(loginResponse.token);
-      setUserName(loginResponse.userResponse.name);
+      const user: User = {
+        id: loginResponse.userResponse.id,
+        name: loginResponse.userResponse.name,
+        email: loginResponse.userResponse.email,
+        token: loginResponse.token,
+      };
+      setUser(user);
       setIsLoggedIn(true);
       navigate("/");
     } catch (e) {

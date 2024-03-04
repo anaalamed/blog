@@ -1,13 +1,13 @@
 import { Flex } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
-import { useGlobalContext } from "../..";
+import { useGlobalContext } from "../../state/state";
 import ModalPost from "./posts/PostModal";
 
 const linkStyle = { color: "#fff", fontWeight: "bold" };
 
 const Topbar: React.FC = () => {
-  const { userName, isLoggedIn } = useGlobalContext();
+  const { user, isLoggedIn } = useGlobalContext();
 
   return (
     <Flex justify="space-between" align="center">
@@ -18,7 +18,7 @@ const Topbar: React.FC = () => {
       {isLoggedIn ? (
         <Flex justify="space-between" align="center" gap={16}>
           <ModalPost />
-          <div>Hey, {userName}</div>
+          <div>Hey, {user?.name}</div>
         </Flex>
       ) : (
         <Flex justify="space-between" gap={16}>

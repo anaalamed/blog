@@ -2,7 +2,7 @@ import React from "react";
 import { Flex } from "antd";
 import { Post } from "../../../rest/common";
 import PostCard from "./PostCard";
-import { useGlobalContext } from "../../..";
+import { useGlobalContext } from "../../../state/state";
 
 const Posts: React.FC = () => {
   const { posts } = useGlobalContext();
