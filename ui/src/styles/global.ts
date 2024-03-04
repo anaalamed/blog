@@ -1,5 +1,11 @@
 import { createGlobalStyle } from "styled-components";
 
+export const buttonStyle = {
+  backgroundColor: "#B0FD75",
+  color: "#1E1C57",
+  fontWeight: "bold",
+};
+
 export const GlobalStyles = createGlobalStyle`
   *,
   *::after,

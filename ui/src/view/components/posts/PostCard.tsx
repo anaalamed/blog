@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Button } from "antd";
 import { Post } from "../../../rest/common";
 import { Link, useLocation } from "react-router-dom";
+import { buttonStyle } from "../../../styles/global";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",
@@ -13,12 +14,6 @@ const cardStyle = {
 const titleStyle = {
   backgroundColor: "#5c6cfa",
   color: "#fff",
-};
-
-const buttonStyle = {
-  backgroundColor: "#B0FD75",
-  color: "#1E1C57",
-  fontWeight: "bold",
 };
 
 const PostCard: React.FC<{ post: Post }> = ({ post }) => {

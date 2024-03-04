@@ -6,6 +6,7 @@ import PostPage from "./view/pages/PostPage";
 import HomePage from "./view/pages/HomePage";
 import Topbar from "./view/components/Topbar";
 import FooterView from "./view/components/Footer";
+import AuthPage from "./view/pages/AuthPage";
 
 const { Header, Footer, Content } = Layout;
 
@@ -45,6 +46,8 @@ const App: React.FC = () => (
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/post/:postId" element={<PostPage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/signup" element={<AuthPage />} />
       </Routes>
     </Content>
     <Footer style={footerStyle}>
