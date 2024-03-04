@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "antd";
 import { GlobalStyles } from "./styles/global";
 import { Route, Routes } from "react-router-dom";
@@ -7,6 +7,7 @@ import HomePage from "./view/pages/HomePage";
 import Topbar from "./view/components/Topbar";
 import FooterView from "./view/components/Footer";
 import AuthPage from "./view/pages/AuthPage";
+import { MyGlobalContext } from ".";
 
 const { Header, Footer, Content } = Layout;
 
@@ -37,25 +38,41 @@ const layoutStyle = {
   minHeight: "100vh",
 };
 
-const App: React.FC = () => (
-  <Layout style={layoutStyle}>
-    <Header style={headerStyle}>
-      <Topbar />
-    </Header>
-    <Content style={contentStyle}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/post/:postId" element={<PostPage />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/signup" element={<AuthPage />} />
-      </Routes>
-    </Content>
-    <Footer style={footerStyle}>
-      <FooterView />
-    </Footer>
+const App: React.FC = () => {
+  const [token, setToken] = useState<string>("");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string>("");
 
-    <GlobalStyles />
-  </Layout>
-);
+  return (
+    <Layout style={layoutStyle}>
+      <MyGlobalContext.Provider
+        value={{
+          token,
+          setToken,
+          isLoggedIn,
+          setIsLoggedIn,
+          userName,
+          setUserName,
+        }}
+      >
+        <Header style={headerStyle}>
+          <Topbar />
+        </Header>
+        <Content style={contentStyle}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/post/:postId" element={<PostPage />} />
+            <Route path="/login" element={<AuthPage />} />
+            <Route path="/signup" element={<AuthPage />} />
+          </Routes>
+        </Content>
+        <Footer style={footerStyle}>
+          <FooterView />
+        </Footer>
+      </MyGlobalContext.Provider>
+      <GlobalStyles />
+    </Layout>
+  );
+};
 
 export default App;
