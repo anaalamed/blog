@@ -1,60 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form, Input, Modal, type FormInstance } from "antd";
+import React, { useState } from "react";
+import { Button, Modal, type FormInstance } from "antd";
 import { buttonStyle } from "../../../styles/global";
-import { createPost } from "../../../rest/PostRequests";
+import { createPost, updatePost } from "../../../rest/PostRequests";
 import { useGlobalContext } from "../../..";
-
-interface Values {
-  title?: string;
-  content?: string;
-}
-
-interface PostCreateFormProps {
-  initialValues: Values;
-  onFormInstanceReady: (instance: FormInstance<Values>) => void;
-}
-
-const PostCreateForm: React.FC<PostCreateFormProps> = ({
-  initialValues,
-  onFormInstanceReady,
-}) => {
-  const [form] = Form.useForm();
-  useEffect(() => {
-    onFormInstanceReady(form);
-  }, []);
-
-  return (
-    <Form
-      layout="vertical"
-      form={form}
-      name="form_in_modal"
-      initialValues={initialValues}
-    >
-      <Form.Item
-        name="title"
-        label="Title"
-        rules={[{ required: true, message: "Please input the title of post!" }]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="content"
-        label="Content"
-        rules={[
-          { required: true, message: "Please input the content of the post!" },
-        ]}
-      >
-        <Input type="textarea" />
-      </Form.Item>
-    </Form>
-  );
-};
+import PostForm, { Values } from "./PostModalForm";
+import { Post } from "../../../rest/common";
 
 interface PostCreateFormModalProps {
   open: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
   initialValues: Values;
+  isNew: boolean;
 }
 
 const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
@@ -62,15 +19,19 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   onCreate,
   onCancel,
   initialValues,
+  isNew,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
   const { token, posts, setPosts } = useGlobalContext();
 
+  const title = isNew ? "Create a new post" : "Update the post";
+  const okText = isNew ? "Create" : "Update";
+
   return (
     <Modal
       open={open}
-      title="Create a new post"
-      okText="Create"
+      title={title}
+      okText={okText}
       cancelText="Cancel"
       okButtonProps={{ autoFocus: true, style: buttonStyle }}
       onCancel={onCancel}
@@ -80,8 +41,17 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
           const values = await formInstance?.validateFields();
           formInstance?.resetFields();
           onCreate(values);
-          const newPost = await createPost(values, token);
-          posts.unshift(newPost);
+          if (isNew) {
+            const newPost = await createPost(values, token);
+            posts.unshift(newPost);
+          } else {
+            const updatedPost = await updatePost(
+              values,
+              token,
+              initialValues.id
+            );
+            posts.unshift(updatedPost);
+          }
           setPosts(posts);
           console.log(posts);
         } catch (error) {
@@ -89,7 +59,7 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
         }
       }}
     >
-      <PostCreateForm
+      <PostForm
         initialValues={initialValues}
         onFormInstanceReady={(instance) => {
           setFormInstance(instance);
@@ -99,7 +69,7 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   );
 };
 
-const ModalAddPost: React.FC = () => {
+const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
   const [formValues, setFormValues] = useState<Values>();
   const [open, setOpen] = useState(false);
 
@@ -109,20 +79,26 @@ const ModalAddPost: React.FC = () => {
     setOpen(false);
   };
 
+  const title = post ? "Update" : "New Post";
+  const initialValues = post
+    ? { title: post.title, content: post.content, id: post.id }
+    : { title: "", content: "" };
+
   return (
     <>
       <Button type="primary" onClick={() => setOpen(true)} style={buttonStyle}>
-        New Post
+        {title}
       </Button>
       {/* <pre>{JSON.stringify(formValues, null, 2)}</pre> */}
       <PostCreateFormModal
         open={open}
         onCreate={onCreate}
         onCancel={() => setOpen(false)}
-        initialValues={{ title: "", content: "" }}
+        initialValues={initialValues}
+        isNew={post ? false : true}
       />
     </>
   );
 };
 
-export default ModalAddPost;
+export default ModalPost;

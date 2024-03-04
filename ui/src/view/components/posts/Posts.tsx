@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Flex } from "antd";
 import { Post } from "../../../rest/common";
 import PostCard from "./PostCard";

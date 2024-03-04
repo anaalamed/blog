@@ -1,3 +1,4 @@
+import { Values } from "../view/components/posts/PostModalForm";
 import { Post, baseUrl } from "./common";
 
 const postUrl = baseUrl.concat("/post");
@@ -25,7 +26,10 @@ export const getPostById = async (postId: string): Promise<Post> => {
   }
 };
 
-export const createPost = async (data: any, token: string): Promise<Post> => {
+export const createPost = async (
+  data: Values,
+  token: string
+): Promise<Post> => {
   try {
     const res = await fetch(postUrl.concat("/addPost"), {
       method: "POST",
@@ -42,6 +46,35 @@ export const createPost = async (data: any, token: string): Promise<Post> => {
       return createPostFromResponse(postRes);
     } else {
       console.error("Create post failed: ", res.statusText);
+      throw new Error();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const updatePost = async (
+  data: Values,
+  token: string,
+  postId: any
+): Promise<Post> => {
+  try {
+    console.log(data);
+    const res = await fetch(postUrl.concat(`/editPost/${postId}`), {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        charset: "utf-8",
+        token: token,
+      },
+      body: JSON.stringify({ title: data.title, content: data.content }),
+    });
+    if (res.ok) {
+      console.log("The Post was updated ");
+      const postRes: any = await res.json();
+      return createPostFromResponse(postRes);
+    } else {
+      console.error("Update post failed: ", res.statusText);
       throw new Error();
     }
   } catch (e) {

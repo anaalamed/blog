@@ -2,7 +2,7 @@ import { Flex } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useGlobalContext } from "../..";
-import ModalAddPost from "./posts/ModalAddPost";
+import ModalPost from "./posts/PostModal";
 
 const linkStyle = { color: "#fff", fontWeight: "bold" };
 
@@ -17,7 +17,7 @@ const Topbar: React.FC = () => {
 
       {isLoggedIn ? (
         <Flex justify="space-between" align="center" gap={16}>
-          <ModalAddPost />
+          <ModalPost />
           <div>Hey, {userName}</div>
         </Flex>
       ) : (
