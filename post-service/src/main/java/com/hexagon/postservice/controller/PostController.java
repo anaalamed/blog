@@ -1,6 +1,7 @@
 package com.hexagon.postservice.controller;
 
-import com.hexagon.authservice.dto.UserResponse;
+import com.hexagon.common.TokenUtils;
+import com.hexagon.common.UserResponseCache;
 import com.hexagon.postservice.dto.PostRequest;
 import com.hexagon.postservice.dto.PostResponse;
 import com.hexagon.postservice.entity.Post;
@@ -20,25 +21,29 @@ import org.springframework.web.client.RestTemplate;
 public class PostController {
   private static final Logger logger = LogManager.getLogger(PostController.class.getName());
 
-  @Autowired private PostService postService;
+  private final RestTemplate restTemplate;
 
-  @Autowired private RestTemplate restTemplate;
+  private final UserResponseCache userResponseCache;
 
-  private static final String authServiceUrl = "http://AUTH-SERVICE/auth/user";
+  private final PostService postService;
+
+  @Autowired
+  public PostController(PostService postService, RestTemplate restTemplate) {
+    this.postService = postService;
+    this.restTemplate = restTemplate;
+    this.userResponseCache = new UserResponseCache(restTemplate);
+  }
 
   @PostMapping("/addPost")
   public PostResponse addPost(@RequestBody PostRequest postRequest, @RequestHeader String token) {
-    String getAuthorReqUrl = authServiceUrl + "?token=" + token;
-    int authorId = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class).getId();
-
+    int authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
     return getPostResponse(postService.addPost(postRequest, authorId));
   }
 
   @PutMapping("/editPost/{postId}")
   public ResponseEntity<?> editPost(
       @RequestBody PostRequest postRequest, @RequestHeader String token, @PathVariable int postId) {
-    String getAuthorReqUrl = authServiceUrl + "?token=" + token;
-    int authorId = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class).getId();
+    int authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
 
     try {
       PostResponse postResponse =
@@ -60,11 +65,7 @@ public class PostController {
     return ResponseEntity.of(postResponse);
   }
 
-  private UserResponse getPostAuthor(Post post) {
-    return restTemplate.getForObject(authServiceUrl + "/" + post.getUserId(), UserResponse.class);
-  }
-
   private PostResponse getPostResponse(Post post) {
-    return new PostResponse(post, getPostAuthor(post));
+    return new PostResponse(post, userResponseCache.getUserResponse(post.getUserId()));
   }
 }

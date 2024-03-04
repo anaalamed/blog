@@ -1,11 +1,11 @@
 package com.hexagon.commentservice.controller;
 
-import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.commentservice.dto.CommentRequest;
 import com.hexagon.commentservice.dto.CommentResponse;
 import com.hexagon.commentservice.entity.Comment;
 import com.hexagon.commentservice.service.CommentService;
-
+import com.hexagon.common.TokenUtils;
+import com.hexagon.common.UserResponseCache;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -20,18 +20,23 @@ import org.springframework.web.client.RestTemplate;
 public class CommentController {
   private static final Logger logger = LogManager.getLogger(CommentController.class.getName());
 
-  @Autowired private CommentService commentService;
+  private final CommentService commentService;
 
-  @Autowired private RestTemplate restTemplate;
+  private final UserResponseCache userResponseCache;
 
-  private static final String authServiceUrl = "http://AUTH-SERVICE/auth/user";
+  private final RestTemplate restTemplate;
+
+  @Autowired
+  public CommentController(CommentService commentService, RestTemplate restTemplate) {
+    this.commentService = commentService;
+    this.restTemplate = restTemplate;
+    this.userResponseCache = new UserResponseCache(restTemplate);
+  }
 
   @PostMapping("/addComment")
   public CommentResponse addComment(
       @RequestBody CommentRequest commentRequest, @RequestHeader String token) {
-    String getAuthorReqUrl = authServiceUrl + "?token=" + token;
-    int authorId = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class).getId();
-
+    int authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
     return getCommentResponse(commentService.addComment(commentRequest, authorId));
   }
 
@@ -40,8 +45,7 @@ public class CommentController {
       @RequestBody CommentRequest commentRequest,
       @RequestHeader String token,
       @PathVariable int commentId) {
-    String getAuthorReqUrl = authServiceUrl + "?token=" + token;
-    int authorId = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class).getId();
+    int authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
 
     try {
       CommentResponse commentResponse =
@@ -59,12 +63,7 @@ public class CommentController {
         .toList();
   }
 
-  private UserResponse getCommentAuthor(Comment comment) {
-    return restTemplate.getForObject(
-        authServiceUrl + "/" + comment.getUserId(), UserResponse.class);
-  }
-
   private CommentResponse getCommentResponse(Comment comment) {
-    return new CommentResponse(comment, getCommentAuthor(comment));
+    return new CommentResponse(comment, userResponseCache.getUserResponse(comment.getUserId()));
   }
 }
