@@ -14,11 +14,14 @@ import lombok.*;
 @Table(name = "post")
 public class Post {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private int id;
 
   private String title;
+
+  @Column(columnDefinition = "LONGTEXT")
   private String content;
+
   private Instant creationTime;
   private Instant updateTime;
   private int userId;

@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,16 +15,16 @@ public class PostResponse {
   private int id;
   private String title;
   private String content;
-  private Instant creationTime;
-  private Instant updateTime;
+  private long creationTime;
+  private long updateTime;
   private UserResponse author;
 
   public PostResponse(Post post, UserResponse author) {
     this.id = post.getId();
     this.title = post.getTitle();
     this.content = post.getContent();
-    this.creationTime = post.getCreationTime();
-    this.updateTime = post.getUpdateTime();
+    this.creationTime = post.getCreationTime().toEpochMilli();
+    //    this.updateTime = post.getUpdateTime().toEpochMilli();
     this.author = author;
   }
 }
