@@ -23,8 +23,6 @@ const headerStyle: React.CSSProperties = {
 const contentStyle: React.CSSProperties = {
   textAlign: "center",
   color: "#3928BD",
-  backgroundColor: "#fff",
-  padding: "2rem 0",
 };
 
 const footerStyle: React.CSSProperties = {

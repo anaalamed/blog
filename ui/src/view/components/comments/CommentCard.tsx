@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "antd";
+import { Card, Flex } from "antd";
 import { Comment } from "../../../rest/common";
 import CommentModal from "./CommentModal";
 import { useGlobalContext } from "../../../state/state";
@@ -26,15 +26,15 @@ const CommentCard: React.FC<{ comment: Comment }> = ({ comment }) => {
       headStyle={titleStyle}
       hoverable
       extra={
-        <div style={titleStyle}>
+        <Flex style={titleStyle} gap={10}>
           <div>{comment.creationTime.toLocaleString()}</div>
-        </div>
+          {isLoggedIn && user?.id === comment.author.id ? (
+            <CommentModal comment={comment} />
+          ) : null}
+        </Flex>
       }
     >
       {comment.content}
-      {isLoggedIn && user?.id === comment.author.id ? (
-        <CommentModal comment={comment} />
-      ) : null}
     </Card>
   );
 };

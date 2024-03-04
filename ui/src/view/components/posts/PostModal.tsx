@@ -5,6 +5,7 @@ import { createPost, updatePost } from "../../../rest/PostRequests";
 import { useGlobalContext } from "../../../state/state";
 import PostForm, { PostValues } from "./PostModalForm";
 import { Post } from "../../../rest/common";
+import { EditOutlined } from "@ant-design/icons";
 
 interface PostCreateFormModalProps {
   open: boolean;
@@ -82,7 +83,7 @@ const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
     setOpen(false);
   };
 
-  const title = post ? "Update" : "New Post";
+  const title = post ? <EditOutlined /> : "New Post";
   const initialValues = post
     ? { title: post.title, content: post.content, id: post.id }
     : { title: "", content: "" };

@@ -4,6 +4,13 @@ export const buttonStyle = {
   backgroundColor: "#B0FD75",
   color: "#1E1C57",
   fontWeight: "bold",
+  borderColor: "#1E1C57",
+};
+
+export const postsPagesStyle = {
+  maxWidth: "1200px",
+  margin: "0 auto",
+  padding: "2rem 0",
 };
 
 export const GlobalStyles = createGlobalStyle`

@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import Signup from "../components/user/Signup";
 
 const pageStyle = {
-  height: "90vh",
+  height: "100vh",
   backgroundImage: "linear-gradient(180deg, #3d2ac6 0%, #1d1674 100%)",
 };
 
@@ -28,6 +28,7 @@ const WormWrapper = styled.div`
   border-radius: 0.5rem;
   background: #fff;
   width: 50%;
+  max-width: 600px;
 `;
 
 export default AuthPage;

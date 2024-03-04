@@ -6,6 +6,7 @@ import CommentForm, { CommentValues } from "./CommentModalForm";
 import { Comment } from "../../../rest/common";
 import { createComment, updateComment } from "../../../rest/CommentRequests";
 import { useParams } from "react-router-dom";
+import { EditOutlined } from "@ant-design/icons";
 
 interface CommentFormModalProps {
   open: boolean;
@@ -88,7 +89,7 @@ const ModalComment: React.FC<{ comment?: Comment }> = ({ comment }) => {
     setOpen(false);
   };
 
-  const title = comment ? "Update" : "New Comment";
+  const title = comment ? <EditOutlined /> : "New Comment";
   const initialValues = comment
     ? { content: comment.content, id: comment.id, postId: comment.postId }
     : { content: "", postId: postId };
