@@ -13,6 +13,13 @@ export const postsPagesStyle = {
   padding: "2rem 0",
 };
 
+export const pagesStyle = {
+  minHeight: "calc(100vh - 161px)",
+  backgroundImage: "linear-gradient(180deg, #3d2ac6 0%, #1d1674 100%)",
+};
+
+export const linkStyle = { color: "#fff", fontWeight: "bold" };
+
 export const GlobalStyles = createGlobalStyle`
   *,
   *::after,

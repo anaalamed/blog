@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import { buttonStyle } from "../../../styles/global";
 import ModalPost from "./PostModal";
 import { useGlobalContext } from "../../../state/state";
+import UserName from "../user/UserName";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",
@@ -32,7 +33,7 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
         <div style={titleStyle}>
           <Flex align="center" gap={10}>
             <div>
-              <div>{post.author.name}</div>
+              <UserName user={post.author} />
               <div>{post.creationTime.toLocaleString()}</div>
             </div>
             {isLoggedIn && user?.id === post.author.id ? (
@@ -47,7 +48,7 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
       {location.pathname.includes("post/") ? null : (
         <>
           <Flex justify="space-between" gap={10}>
-            <Link to={`post/${post.id}`}>
+            <Link to={`/post/${post.id}`}>
               <Button style={buttonStyle}>Read More</Button>
             </Link>
           </Flex>

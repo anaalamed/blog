@@ -26,6 +26,17 @@ export const getPostById = async (postId: string): Promise<Post> => {
   }
 };
 
+export const getPostsByUserId = async (userId: any): Promise<Post[]> => {
+  try {
+    const res = await fetch(postUrl.concat(`/user?userId=${userId}`));
+    const listRes: any[] = await res.json();
+    return listRes.map((e) => createPostFromResponse(e));
+  } catch (e) {
+    console.log("Error occured during fetching posts: ", e);
+    throw e;
+  }
+};
+
 export const createPost = async (
   data: PostValues,
   token: string

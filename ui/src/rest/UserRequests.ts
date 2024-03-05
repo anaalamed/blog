@@ -45,3 +45,14 @@ export const signup = async (data: any): Promise<User> => {
     throw e;
   }
 };
+
+export const getUserById = async (userId: any): Promise<User> => {
+  try {
+    const res = await fetch(authUrl.concat(`/user/${userId}`));
+    const user: User = await res.json();
+    return user;
+  } catch (e) {
+    console.log("Error occured during fetching user's data: ", e);
+    throw e;
+  }
+};

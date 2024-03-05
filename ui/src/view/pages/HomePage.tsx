@@ -4,7 +4,7 @@ import { getAllPosts } from "../../rest/PostRequests";
 import { useGlobalContext } from "../../state/state";
 
 const HomePage: React.FC = () => {
-  const { setPosts } = useGlobalContext();
+  const { setPosts, posts } = useGlobalContext();
 
   useEffect(() => {
     async function getPosts() {
@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
     getPosts();
   }, []);
 
-  return <Posts />;
+  return <Posts posts={posts} />;
 };
 
 export default HomePage;

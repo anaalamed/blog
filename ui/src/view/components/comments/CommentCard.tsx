@@ -6,6 +6,7 @@ import { useGlobalContext } from "../../../state/state";
 import { DeleteOutlined } from "@ant-design/icons";
 import { buttonStyle } from "../../../styles/global";
 import { deleteComment } from "../../../rest/CommentRequests";
+import UserName from "../user/UserName";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",
@@ -28,9 +29,11 @@ const CommentCard: React.FC<{ comment: Comment }> = ({ comment }) => {
     setComments(newComments);
   };
 
+  const author = <UserName user={comment.author} />;
+
   return (
     <Card
-      title={comment.author.name}
+      title={author}
       style={cardStyle}
       size="default"
       headStyle={titleStyle}
