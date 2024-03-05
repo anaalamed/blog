@@ -7,7 +7,6 @@ import com.hexagon.postservice.dto.PostResponse;
 import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.service.PostService;
 import java.nio.file.AccessDeniedException;
-import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,6 +68,12 @@ public class PostController {
   @GetMapping
   public ResponseEntity<?> getPosts() {
     return ResponseEntity.ok(postService.getPosts().stream().map(this::getPostResponse).toList());
+  }
+
+  @RequestMapping(method = RequestMethod.GET, path = "/user")
+  public ResponseEntity<?> getPostsByUserId(@RequestParam(value = "userId") int userId) {
+    return ResponseEntity.ok(
+        postService.getPostsByUserId(userId).stream().map(this::getPostResponse).toList());
   }
 
   @GetMapping("/{id}")

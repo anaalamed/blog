@@ -39,6 +39,10 @@ public class PostService {
     return postRepository.findAllByOrderByCreationTimeDesc();
   }
 
+  public List<Post> getPostsByUserId(int userId) {
+    return postRepository.findAllByUserIdOrderByCreationTimeDesc(userId);
+  }
+
   public Optional<Post> getPostById(int id) {
     return postRepository.findById(id);
   }
