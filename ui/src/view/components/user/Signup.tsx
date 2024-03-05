@@ -1,33 +1,13 @@
 import React, { useState } from "react";
 
 import { Button, Form, Input, Result } from "antd";
-import { buttonStyle } from "../../../styles/global";
+import {
+  authFormItemLayout,
+  authTailFormItemLayout,
+  buttonStyle,
+} from "../../../styles/global";
 import { signup } from "../../../rest/UserRequests";
 import { Link } from "react-router-dom";
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 4,
-    },
-  },
-};
 
 const Signup: React.FC = () => {
   const [form] = Form.useForm();
@@ -46,7 +26,7 @@ const Signup: React.FC = () => {
         <SuccessModal />
       ) : (
         <Form
-          {...formItemLayout}
+          {...authFormItemLayout}
           form={form}
           name="register"
           onFinish={onFinish}
@@ -123,7 +103,7 @@ const Signup: React.FC = () => {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item {...tailFormItemLayout}>
+          <Form.Item {...authTailFormItemLayout}>
             <Button type="primary" htmlType="submit" style={buttonStyle}>
               Sign Up
             </Button>

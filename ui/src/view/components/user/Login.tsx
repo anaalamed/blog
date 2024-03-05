@@ -1,7 +1,11 @@
 import React from "react";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 import { login } from "../../../rest/UserRequests";
-import { buttonStyle } from "../../../styles/global";
+import {
+  authFormItemLayout,
+  authTailFormItemLayout,
+  buttonStyle,
+} from "../../../styles/global";
 import { useGlobalContext } from "../../../state/state";
 import { useNavigate } from "react-router-dom";
 import { User } from "../../../rest/common";
@@ -13,7 +17,6 @@ const onFinishFailed = (errorInfo: any) => {
 type FieldType = {
   email?: string;
   password?: string;
-  remember?: string;
 };
 
 const Login: React.FC = () => {
@@ -39,11 +42,10 @@ const Login: React.FC = () => {
 
   return (
     <Form
+      {...authFormItemLayout}
       name="basic"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
+      initialValues={{}}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -64,15 +66,7 @@ const Login: React.FC = () => {
         <Input.Password />
       </Form.Item>
 
-      <Form.Item<FieldType>
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 4, span: 16 }}
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+      <Form.Item {...authTailFormItemLayout}>
         <Button type="primary" htmlType="submit" style={buttonStyle}>
           Login
         </Button>
