@@ -19,7 +19,29 @@ export const login = async (data: any): Promise<LoginResponse> => {
     });
     return await res.json();
   } catch (e) {
-    console.log("Error occured during fetching posts: ", e);
+    console.log("Login failed: ", e);
+    throw e;
+  }
+};
+
+export const signup = async (data: any): Promise<User> => {
+  try {
+    const res = await fetch(authUrl.concat("/signup"), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        charset: "utf-8",
+      },
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      }),
+    });
+    console.log("New User registered");
+    return await res.json();
+  } catch (e) {
+    console.log("Signup failed: ", e);
     throw e;
   }
 };
