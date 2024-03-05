@@ -56,13 +56,16 @@ public class AuthService {
   }
 
   public Optional<UserResponse> getUserByToken(String token) {
-    int userId =
+    Optional<Integer> userId =
         tokens.entrySet().stream()
             .filter(entry -> token.equals(entry.getValue()))
             .map(Map.Entry::getKey)
-            .findFirst()
-            .get();
+            .findFirst();
 
-    return userRepository.findById(userId).map(UserResponse::new);
+    if (userId.isEmpty()) {
+      return Optional.empty();
+    }
+
+    return userRepository.findById(userId.get()).map(UserResponse::new);
   }
 }

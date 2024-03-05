@@ -35,19 +35,31 @@ public class PostController {
   }
 
   @PostMapping("/addPost")
-  public PostResponse addPost(@RequestBody PostRequest postRequest, @RequestHeader String token) {
-    int authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
-    return getPostResponse(postService.addPost(postRequest, authorId));
+  public ResponseEntity<?> addPost(
+      @RequestBody PostRequest postRequest, @RequestHeader String token) {
+    Optional<Integer> authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
+
+    if (authorId.isEmpty()) {
+      logger.info("User is not authorized");
+      return ResponseEntity.badRequest().body("User is not authorized");
+    }
+
+    return ResponseEntity.ok(getPostResponse(postService.addPost(postRequest, authorId.get())));
   }
 
   @PutMapping("/editPost/{postId}")
   public ResponseEntity<?> editPost(
       @RequestBody PostRequest postRequest, @RequestHeader String token, @PathVariable int postId) {
-    int authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
+    Optional<Integer> authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
+
+    if (authorId.isEmpty()) {
+      logger.info("User is not authorized");
+      return ResponseEntity.badRequest().body("User is not authorized");
+    }
 
     try {
       PostResponse postResponse =
-          getPostResponse(postService.editPost(postId, postRequest, authorId));
+          getPostResponse(postService.editPost(postId, postRequest, authorId.get()));
       return ResponseEntity.ok(postResponse);
     } catch (AccessDeniedException e) {
       return ResponseEntity.badRequest().body(e);
@@ -55,8 +67,8 @@ public class PostController {
   }
 
   @GetMapping
-  public List<PostResponse> getPosts() {
-    return postService.getPosts().stream().map(this::getPostResponse).toList();
+  public ResponseEntity<?> getPosts() {
+    return ResponseEntity.ok(postService.getPosts().stream().map(this::getPostResponse).toList());
   }
 
   @GetMapping("/{id}")

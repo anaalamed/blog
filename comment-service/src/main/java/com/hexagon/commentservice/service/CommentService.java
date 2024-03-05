@@ -4,7 +4,6 @@ import com.hexagon.commentservice.dto.CommentRequest;
 import com.hexagon.commentservice.entity.Comment;
 import com.hexagon.commentservice.repository.CommentRepository;
 import java.nio.file.AccessDeniedException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +19,6 @@ public class CommentService {
 
   public Comment addComment(CommentRequest commentRequest, int authorId) {
     Comment comment = new Comment(commentRequest, authorId);
-    comment.setCreationTime(Instant.now());
     return commentRepository.save(comment);
   }
 
@@ -40,7 +38,6 @@ public class CommentService {
     }
 
     commentToUpdate.setContent(commentRequest.getContent());
-    commentToUpdate.setUpdateTime(Instant.now());
     Comment updatedComment = commentRepository.save(commentToUpdate);
     logger.info("The comment was updated: {}", updatedComment);
     return updatedComment;
