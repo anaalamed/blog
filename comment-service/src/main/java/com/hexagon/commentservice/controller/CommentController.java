@@ -6,6 +6,7 @@ import com.hexagon.commentservice.entity.Comment;
 import com.hexagon.commentservice.service.CommentService;
 import com.hexagon.common.TokenUtils;
 import com.hexagon.common.UserResponseCache;
+import com.hexagon.postservice.dto.PostResponse;
 import java.nio.file.AccessDeniedException;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @RequestMapping(value = "/comment")
@@ -43,6 +45,10 @@ public class CommentController {
       return ResponseEntity.badRequest().body("User is not authorized");
     }
 
+    if (!isPostExist(commentRequest.getPostId())) {
+      logger.info("Post doesn't exist");
+      return ResponseEntity.badRequest().body("Post doesn't exist");
+    }
     return ResponseEntity.ok(
         getCommentResponse(commentService.addComment(commentRequest, authorId.get())));
   }
@@ -93,5 +99,16 @@ public class CommentController {
 
   private CommentResponse getCommentResponse(Comment comment) {
     return new CommentResponse(comment, userResponseCache.getUserResponse(comment.getUserId()));
+  }
+
+  private boolean isPostExist(int postId) {
+    String getPostUrl = "http://POST-SERVICE/post/" + postId;
+
+    try {
+      restTemplate.getForObject(getPostUrl, PostResponse.class);
+      return true;
+    } catch (HttpClientErrorException e) {
+      return false;
+    }
   }
 }
