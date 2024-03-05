@@ -44,17 +44,21 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
           onCreate(values);
           if (isNew) {
             const newPost = await createPost(values, user?.token || "");
-            posts.unshift(newPost);
+            if (newPost !== undefined) {
+              posts.unshift(newPost);
+            }
           } else {
             const updatedPost = await updatePost(
               values,
               user?.token || "",
               initialValues.id
             );
-            const updatedPostIndex = posts.findIndex(
-              (e) => e.id === updatedPost.id
-            );
-            posts[updatedPostIndex] = updatedPost;
+            if (updatedPost !== undefined) {
+              const updatedPostIndex = posts.findIndex(
+                (e) => e.id === updatedPost.id
+              );
+              posts[updatedPostIndex] = updatedPost;
+            }
           }
           const newPosts: Post[] = [...posts];
           setPosts(newPosts);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Flex } from "antd";
+import { Flex, Spin } from "antd";
 import { getPostById } from "../../rest/PostRequests";
 import { Post } from "../../rest/common";
 import PostCard from "../components/posts/PostCard";
@@ -9,19 +9,26 @@ import Comments from "../components/comments/Comments";
 
 import { useGlobalContext } from "../../state/state";
 import { postsPagesStyle } from "../../styles/global";
+import FailureMessage from "../components/FailureMessage";
 
 const PostPage: React.FC = () => {
   const [post, setPost] = useState<Post>();
+  const [isLoadingPost, setLoadingPost] = useState<boolean>(true);
+  const [isLoadingComments, setLoadingComments] = useState<boolean>(true);
   const { postId } = useParams();
   const { comments, setComments } = useGlobalContext();
 
   useEffect(() => {
     async function getPost(postId: string) {
       const post = await getPostById(postId);
-      setPost(post);
+      if (post !== undefined) {
+        setPost(post);
+        setLoadingPost(false);
+      }
 
       const comments = await getAllCommentsByPostId(postId);
       setComments(comments);
+      setLoadingComments(false);
     }
     getPost(postId || "");
   }, [postId]);
@@ -29,9 +36,24 @@ const PostPage: React.FC = () => {
   return (
     <div style={postsPagesStyle}>
       <Flex vertical gap="middle" justify="center" align="center">
-        {post !== undefined ? <PostCard post={post} /> : null}
-
-        <Comments comments={comments} />
+        {isLoadingPost ? (
+          <Spin />
+        ) : (
+          <>
+            {post !== undefined ? (
+              <>
+                <PostCard post={post} />
+                {isLoadingComments ? (
+                  <Spin />
+                ) : (
+                  <Comments comments={comments} />
+                )}
+              </>
+            ) : (
+              <FailureMessage />
+            )}
+          </>
+        )}
       </Flex>
     </div>
   );

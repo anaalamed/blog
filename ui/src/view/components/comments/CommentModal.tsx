@@ -49,17 +49,21 @@ const CommentFormModal: React.FC<CommentFormModalProps> = ({
               user?.token || "",
               initialValues.postId
             );
-            comments.unshift(newComment);
+            if (newComment !== undefined) {
+              comments.unshift(newComment);
+            }
           } else {
             const updatedComment = await updateComment(
               values,
               user?.token || "",
               initialValues.id
             );
-            const updatedCommentIndex = comments.findIndex(
-              (e) => e.id === updatedComment.id
-            );
-            comments[updatedCommentIndex] = updatedComment;
+            if (updatedComment !== undefined) {
+              const updatedCommentIndex = comments.findIndex(
+                (e) => e.id === updatedComment.id
+              );
+              comments[updatedCommentIndex] = updatedComment;
+            }
           }
           const newComments: Comment[] = [...comments];
           setComments(newComments);
