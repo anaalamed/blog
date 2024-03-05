@@ -72,6 +72,27 @@ export const updateComment = async (
   }
 };
 
+export const deleteComment = async (token: string, id: any): Promise<void> => {
+  try {
+    const res = await fetch(commentsUrl.concat(`/deleteComment/${id}`), {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        charset: "utf-8",
+        token: token,
+      },
+    });
+    if (res.ok) {
+      console.log("The Comment was deleted");
+    } else {
+      console.error("Delete comment failed: ", res.statusText);
+      throw new Error();
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const createCommentFromResponse = (commentResponse: any): Comment => {
   return {
     id: commentResponse.id,
