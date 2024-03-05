@@ -51,8 +51,20 @@ public class CommentController {
       CommentResponse commentResponse =
           getCommentResponse(commentService.editComment(commentId, commentRequest, authorId));
       return ResponseEntity.ok(commentResponse);
-    } catch (AccessDeniedException e) {
-      return ResponseEntity.badRequest().body(e);
+    } catch (AccessDeniedException | RuntimeException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
+
+  @DeleteMapping("/deleteComment/{commentId}")
+  public ResponseEntity<?> deleteComment(@RequestHeader String token, @PathVariable int commentId) {
+    int authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
+
+    try {
+      commentService.deleteComment(commentId, authorId);
+      return ResponseEntity.ok().build();
+    } catch (AccessDeniedException | RuntimeException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 

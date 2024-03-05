@@ -6,6 +6,7 @@ import com.hexagon.commentservice.repository.CommentRepository;
 import java.nio.file.AccessDeniedException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,41 @@ public class CommentService {
 
   public Comment editComment(int commentId, CommentRequest commentRequest, int authorId)
       throws AccessDeniedException {
-    Comment commentToUpdate = commentRepository.findById(commentId).get();
+    Optional<Comment> optionalCommentToUpdate = commentRepository.findById(commentId);
 
+    if (optionalCommentToUpdate.isEmpty()) {
+      logger.info("Comment with id {} is not found", commentId);
+      throw new RuntimeException("Comment is not found");
+    }
+
+    Comment commentToUpdate = optionalCommentToUpdate.get();
     if (commentToUpdate.getUserId() != authorId) {
+      logger.info("User can only update his own comment");
       throw new AccessDeniedException("User can update only his own comment");
     }
 
     commentToUpdate.setContent(commentRequest.getContent());
     commentToUpdate.setUpdateTime(Instant.now());
-    return commentRepository.save(commentToUpdate);
+    Comment updatedComment = commentRepository.save(commentToUpdate);
+    logger.info("The comment was updated: {}", updatedComment);
+    return updatedComment;
+  }
+
+  public void deleteComment(int commentId, int authorId) throws AccessDeniedException {
+    Optional<Comment> commentToDelete = commentRepository.findById(commentId);
+
+    if (commentToDelete.isEmpty()) {
+      logger.info("Comment with id {} is not found", commentId);
+      throw new RuntimeException("Comment is not found");
+    }
+
+    if (authorId != commentToDelete.get().getUserId()) {
+      logger.info("User can only delete his own comment");
+      throw new AccessDeniedException("User can only delete his own comment");
+    }
+
+    commentRepository.deleteById(commentId);
+    logger.info("Comment with id {} was deleted", commentId);
   }
 
   public List<Comment> getCommentsByPostId(int postId) {
