@@ -1,5 +1,6 @@
 package com.hexagon.authservice.controller;
 
+import com.hexagon.authservice.dto.UserRequest;
 import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.authservice.model.User;
 import com.hexagon.authservice.service.AuthService;
@@ -20,18 +21,18 @@ public class AuthController {
   @Autowired private AuthService authService;
 
   @PostMapping("/signup")
-  public ResponseEntity<?> createUser(@RequestBody User user) {
-    if (!InputValidations.isValidEmail(user.getEmail())
-        || !InputValidations.isValidName(user.getName())
-        || !InputValidations.isValidPassword(user.getPassword())) {
+  public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
+    if (!InputValidations.isValidEmail(userRequest.getEmail())
+        || !InputValidations.isValidName(userRequest.getName())
+        || !InputValidations.isValidPassword(userRequest.getPassword())) {
       return ResponseEntity.badRequest().body("Invalid inputs");
     }
 
     try {
-      User userResponse = authService.createUser(user);
+      UserResponse userResponse = authService.createUser(userRequest);
       return ResponseEntity.ok(userResponse);
     } catch (DataIntegrityViolationException e) {
-      return ResponseEntity.badRequest().body(user.getEmail() + " Email already exists");
+      return ResponseEntity.badRequest().body(userRequest.getEmail() + " Email already exists");
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

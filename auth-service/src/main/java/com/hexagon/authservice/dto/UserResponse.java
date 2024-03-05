@@ -1,15 +1,13 @@
 package com.hexagon.authservice.dto;
 
 import com.hexagon.authservice.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UserResponse {
   private int id;
   private String name;

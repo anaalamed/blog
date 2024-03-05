@@ -4,6 +4,8 @@ import com.hexagon.commentservice.dto.CommentRequest;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -14,12 +16,14 @@ import lombok.*;
 @Table(name = "comment")
 public class Comment {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private int id;
 
   private String content;
-  private Instant creationTime;
-  private Instant updateTime;
+
+  @CreationTimestamp private Instant creationTime;
+
+  @UpdateTimestamp private Instant updateTime;
   private int userId;
   private int postId;
 

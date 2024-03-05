@@ -4,6 +4,8 @@ import com.hexagon.postservice.dto.PostRequest;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -22,8 +24,8 @@ public class Post {
   @Column(columnDefinition = "LONGTEXT")
   private String content;
 
-  private Instant creationTime;
-  private Instant updateTime;
+  @CreationTimestamp private Instant creationTime;
+  @UpdateTimestamp private Instant updateTime;
   private int userId;
 
   public Post(PostRequest postRequest, int authorId) {

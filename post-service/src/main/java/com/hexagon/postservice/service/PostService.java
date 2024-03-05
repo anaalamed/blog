@@ -4,7 +4,6 @@ import com.hexagon.postservice.dto.PostRequest;
 import com.hexagon.postservice.entity.Post;
 import com.hexagon.postservice.repository.PostRepository;
 import java.nio.file.AccessDeniedException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +19,6 @@ public class PostService {
 
   public Post addPost(PostRequest postRequest, int authorId) {
     Post post = new Post(postRequest, authorId);
-    post.setCreationTime(Instant.now());
     return postRepository.save(post);
   }
 
@@ -34,12 +32,15 @@ public class PostService {
 
     postToUpdate.setTitle(postRequest.getTitle());
     postToUpdate.setContent(postRequest.getContent());
-    postToUpdate.setUpdateTime(Instant.now());
     return postRepository.save(postToUpdate);
   }
 
   public List<Post> getPosts() {
     return postRepository.findAllByOrderByCreationTimeDesc();
+  }
+
+  public List<Post> getPostsByUserId(int userId) {
+    return postRepository.findAllByUserIdOrderByCreationTimeDesc(userId);
   }
 
   public Optional<Post> getPostById(int id) {
