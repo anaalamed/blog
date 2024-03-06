@@ -3,8 +3,8 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../../state/state";
 import ModalPost from "./posts/PostModal";
-
-const linkStyle = { color: "#fff", fontWeight: "bold" };
+import UserName from "./user/UserName";
+import { linkStyle } from "../../styles/global";
 
 const Topbar: React.FC = () => {
   const { user, isLoggedIn } = useGlobalContext();
@@ -20,7 +20,7 @@ const Topbar: React.FC = () => {
         <>
           <Flex justify="space-between" align="center" gap={16}>
             {location.pathname === "/" ? <ModalPost /> : null}
-            <div>Hey, {user?.name}</div>
+            <UserName user={user} />
           </Flex>
         </>
       ) : (

@@ -20,7 +20,7 @@ export const createComment = async (
   data: CommentValues,
   token: string,
   postId: any
-): Promise<Comment> => {
+): Promise<Comment | undefined> => {
   try {
     const res = await fetch(commentsUrl.concat("/addComment"), {
       method: "POST",
@@ -31,16 +31,13 @@ export const createComment = async (
       },
       body: JSON.stringify({ content: data.content, postId: postId }),
     });
-    if (res.ok) {
-      const commentRes: any = await res.json();
-      console.log("New Comment was created: ", commentRes);
-      return createCommentFromResponse(commentRes);
-    } else {
-      console.error("Create comment failed: ", res.statusText);
-      throw new Error();
-    }
+
+    const commentRes: any = await res.json();
+    console.log("New Comment was created: ", commentRes);
+    return createCommentFromResponse(commentRes);
   } catch (e) {
-    throw e;
+    console.error("Create comment failed ");
+    return undefined;
   }
 };
 
@@ -48,7 +45,7 @@ export const updateComment = async (
   data: CommentValues,
   token: string,
   id: any
-): Promise<Comment> => {
+): Promise<Comment | undefined> => {
   try {
     const res = await fetch(commentsUrl.concat(`/editComment/${id}`), {
       method: "PUT",
@@ -59,16 +56,30 @@ export const updateComment = async (
       },
       body: JSON.stringify({ content: data.content }),
     });
-    if (res.ok) {
-      const commentRes: any = await res.json();
-      console.log("The Comment was updated: ", commentRes);
-      return createCommentFromResponse(commentRes);
-    } else {
-      console.error("Update comment failed: ", res.statusText);
-      throw new Error();
-    }
+
+    const commentRes: any = await res.json();
+    console.log("The Comment was updated: ", commentRes);
+    return createCommentFromResponse(commentRes);
   } catch (e) {
-    throw e;
+    console.error("Update comment failed ");
+    return undefined;
+  }
+};
+
+export const deleteComment = async (token: string, id: any): Promise<void> => {
+  try {
+    const res = await fetch(commentsUrl.concat(`/deleteComment/${id}`), {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        charset: "utf-8",
+        token: token,
+      },
+    });
+
+    console.log("The Comment was deleted");
+  } catch (e) {
+    console.error("Delete comment failed: ");
   }
 };
 

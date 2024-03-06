@@ -9,6 +9,7 @@ import FooterView from "./view/components/Footer";
 import AuthPage from "./view/pages/AuthPage";
 import { MyGlobalContext } from "./state/state";
 import { Post, User, Comment } from "./rest/common";
+import UserPage from "./view/pages/UserPage";
 const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -29,6 +30,7 @@ const footerStyle: React.CSSProperties = {
   textAlign: "center",
   color: "#fff",
   backgroundColor: "#1d1674",
+  height: 97,
 };
 
 const layoutStyle = {
@@ -40,8 +42,10 @@ const layoutStyle = {
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User>();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const [postPage, setPostPage] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>([]);
+  const [userPosts, setUserPosts] = useState<Post[]>([]);
 
   return (
     <Layout style={layoutStyle}>
@@ -51,10 +55,14 @@ const App: React.FC = () => {
           setIsLoggedIn,
           user,
           setUser,
-          posts,
-          setPosts,
+          allPosts,
+          setAllPosts,
+          postPage,
+          setPostPage,
           comments,
           setComments,
+          userPosts,
+          setUserPosts,
         }}
       >
         <Header style={headerStyle}>
@@ -66,6 +74,7 @@ const App: React.FC = () => {
             <Route path="/post/:postId" element={<PostPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<AuthPage />} />
+            <Route path="/user/:userId" element={<UserPage />} />
           </Routes>
         </Content>
         <Footer style={footerStyle}>

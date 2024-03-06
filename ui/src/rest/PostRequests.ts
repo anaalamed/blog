@@ -14,7 +14,9 @@ export const getAllPosts = async (): Promise<Post[]> => {
   }
 };
 
-export const getPostById = async (postId: string): Promise<Post> => {
+export const getPostById = async (
+  postId: string
+): Promise<Post | undefined> => {
   try {
     const res = await fetch(postUrl.concat(`/${postId}`));
     const postRes: any = await res.json();
@@ -22,14 +24,25 @@ export const getPostById = async (postId: string): Promise<Post> => {
     return post;
   } catch (e) {
     console.log("Error occured during fetching posts: ", e);
-    throw e;
+    return undefined;
+  }
+};
+
+export const getPostsByUserId = async (userId: string): Promise<Post[]> => {
+  try {
+    const res = await fetch(postUrl.concat(`/user?userId=${userId}`));
+    const listRes: any[] = await res.json();
+    return listRes.map((e) => createPostFromResponse(e));
+  } catch (e) {
+    console.log("Error occured during fetching posts: ", e);
+    return [];
   }
 };
 
 export const createPost = async (
   data: PostValues,
   token: string
-): Promise<Post> => {
+): Promise<Post | undefined> => {
   try {
     const res = await fetch(postUrl.concat("/addPost"), {
       method: "POST",
@@ -40,16 +53,13 @@ export const createPost = async (
       },
       body: JSON.stringify({ title: data.title, content: data.content }),
     });
-    if (res.ok) {
-      const postRes: any = await res.json();
-      console.log("New Post was created: ", postRes);
-      return createPostFromResponse(postRes);
-    } else {
-      console.error("Create post failed: ", res.statusText);
-      throw new Error();
-    }
+
+    const postRes: any = await res.json();
+    console.log("New Post was created: ", postRes);
+    return createPostFromResponse(postRes);
   } catch (e) {
-    throw e;
+    console.log("Create post failed: ");
+    return undefined;
   }
 };
 
@@ -57,7 +67,7 @@ export const updatePost = async (
   data: PostValues,
   token: string,
   postId: any
-): Promise<Post> => {
+): Promise<Post | undefined> => {
   try {
     console.log(data);
     const res = await fetch(postUrl.concat(`/editPost/${postId}`), {
@@ -69,16 +79,13 @@ export const updatePost = async (
       },
       body: JSON.stringify({ title: data.title, content: data.content }),
     });
-    if (res.ok) {
-      const postRes: any = await res.json();
-      console.log("The Post was updated: ", postRes);
-      return createPostFromResponse(postRes);
-    } else {
-      console.error("Update post failed: ", res.statusText);
-      throw new Error();
-    }
+
+    const postRes: any = await res.json();
+    console.log("The Post was updated: ", postRes);
+    return createPostFromResponse(postRes);
   } catch (e) {
-    throw e;
+    console.log("Update post failed: ");
+    return undefined;
   }
 };
 
