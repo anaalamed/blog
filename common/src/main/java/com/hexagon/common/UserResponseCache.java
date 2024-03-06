@@ -36,9 +36,4 @@ public class UserResponseCache {
       throw new RuntimeException(e);
     }
   }
-
-  public int getUserIdFromToken(RestTemplate restTemplate, String token) {
-    String getAuthorReqUrl = AUTH_SERVICE_URL + "?token=" + token;
-    return restTemplate.getForObject(getAuthorReqUrl, UserResponse.class).getId();
-  }
 }

@@ -6,9 +6,9 @@ import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.authservice.model.User;
 import com.hexagon.authservice.repository.UserRepository;
 import com.hexagon.authservice.utils.AuthUtils;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class AuthService {
   private static final Logger logger = LogManager.getLogger(AuthService.class.getName());
   @Autowired private UserRepository userRepository;
 
-  Map<String, Integer> tokens = new HashMap<>();
+  Map<String, Integer> tokens = new ConcurrentHashMap<>();
 
   public UserResponse createUser(UserRequest userRequest) {
     User user = new User(userRequest);

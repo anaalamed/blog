@@ -17,7 +17,7 @@ public class TokenUtils {
 
     try {
       UserResponse userResponse = restTemplate.getForObject(getAuthorReqUrl, UserResponse.class);
-      return Optional.of(userResponse.getId());
+      return Optional.ofNullable(userResponse).map(UserResponse::getId);
     } catch (HttpClientErrorException e) {
       return Optional.empty();
     }

@@ -1,11 +1,15 @@
 package com.hexagon.authservice.utils;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-
+import com.google.common.base.Strings;
 import java.time.Instant;
 import java.util.UUID;
 
 public class AuthUtils {
+
+  private static final BCrypt.Hasher HASHER = BCrypt.withDefaults();
+  private static final BCrypt.Verifyer VERIFIER = BCrypt.verifyer();
+
   public static String generateUniqueToken() {
     StringBuilder token = new StringBuilder();
     long currentTimeInMillisecond = Instant.now().toEpochMilli();
@@ -13,17 +17,15 @@ public class AuthUtils {
   }
 
   public static String hashPassword(String password) {
-
-    if (password == null || password.equals("")) {
+    if (Strings.isNullOrEmpty(password)) {
       return password;
     }
-    return BCrypt.withDefaults().hashToString(12, password.toCharArray());
+    return HASHER.hashToString(12, password.toCharArray());
   }
 
   public static boolean verifyPassword(String passwordFromUser, String passwordFromDB) {
-
     BCrypt.Result result =
-        BCrypt.verifyer().verify(passwordFromUser.toCharArray(), passwordFromDB.toCharArray());
+        VERIFIER.verify(passwordFromUser.toCharArray(), passwordFromDB.toCharArray());
 
     return result.verified;
   }
