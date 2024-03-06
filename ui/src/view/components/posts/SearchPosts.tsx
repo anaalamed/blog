@@ -16,6 +16,7 @@ const SearchPosts: React.FC = () => {
 
   const onSearch: SearchProps["onSearch"] = async (value, _e, info) => {
     console.log(info?.source, value);
+    setAllPosts([]);
     const posts = await getPostsByTitleOrContent(value);
     if (posts !== undefined) {
       setAllPosts(posts);

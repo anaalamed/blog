@@ -19,22 +19,15 @@ const HomePage: React.FC = () => {
     getPosts();
   }, []);
 
+  if (isLoading) {
+    return <Spin size="large" style={{ padding: "1rem" }} />;
+  }
+
   return (
     <Flex vertical style={postsPagesStyle}>
-      {isLoading ? (
-        <Spin />
-      ) : (
-        <>
-          {allPosts.length ? (
-            <>
-              <SearchPosts />
-              <Posts posts={allPosts} />
-            </>
-          ) : (
-            <h3>No posts yet...</h3>
-          )}
-        </>
-      )}
+      <SearchPosts />
+
+      {allPosts.length ? <Posts posts={allPosts} /> : <h3>No posts yet...</h3>}
     </Flex>
   );
 };
