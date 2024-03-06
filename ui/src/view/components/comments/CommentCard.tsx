@@ -5,7 +5,7 @@ import CommentModal from "./CommentModal";
 import { useGlobalContext } from "../../../state/state";
 import { DeleteOutlined } from "@ant-design/icons";
 import { buttonStyle } from "../../../styles/global";
-import { deleteComment } from "../../../rest/CommentRequests";
+import { deleteComment } from "../../../rest/commentRequests";
 import UserName from "../user/UserName";
 
 const cardStyle = {

@@ -44,7 +44,8 @@ public class PostService {
   }
 
   public List<Post> getPostsByTitleOrContentContaining(String value) {
-    return postRepository.findAllByTitleOrContentContaining(value, value);
+    return postRepository.findAllByTitleContainingOrContentContainingOrderByCreationTimeDesc(
+        value, value);
   }
 
   public Optional<Post> getPostById(int id) {

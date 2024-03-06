@@ -6,7 +6,7 @@ import {
   authTailFormItemLayout,
   buttonStyle,
 } from "../../../styles/global";
-import { signup } from "../../../rest/UserRequests";
+import { signup } from "../../../rest/userRequests";
 import { Link } from "react-router-dom";
 
 const Signup: React.FC = () => {

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Spin } from "antd";
-import { getPostById } from "../../rest/PostRequests";
-import { Post } from "../../rest/common";
+import { getPostById } from "../../rest/postRequests";
 import PostCard from "../components/posts/PostCard";
 import { useParams } from "react-router-dom";
-import { getAllCommentsByPostId } from "../../rest/CommentRequests";
+import { getAllCommentsByPostId } from "../../rest/commentRequests";
 import Comments from "../components/comments/Comments";
 
 import { useGlobalContext } from "../../state/state";
