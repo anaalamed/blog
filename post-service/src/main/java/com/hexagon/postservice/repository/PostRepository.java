@@ -10,4 +10,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
   List<Post> findAllByOrderByCreationTimeDesc();
 
   List<Post> findAllByUserIdOrderByCreationTimeDesc(int userId);
+
+  List<Post> findAllByTitleContainingOrContentContainingOrderByCreationTimeDesc(
+      String title, String content);
 }

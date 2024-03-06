@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Flex, Spin } from "antd";
 import UserInfo from "../components/user/UserInfo";
 import { useParams } from "react-router-dom";
-import { getUserById } from "../../rest/UserRequests";
+import { getUserById } from "../../rest/userRequests";
 import { User } from "../../rest/common";
-import { getPostsByUserId } from "../../rest/PostRequests";
+import { getPostsByUserId } from "../../rest/postRequests";
 import Posts from "../components/posts/Posts";
 import { ComponentWrapper, postsPagesStyle } from "../../styles/global";
 import FailureMessage from "../components/FailureMessage";
@@ -31,23 +31,21 @@ const UserPage: React.FC = () => {
     getUser(params.userId || "");
   }, [params.userId]);
 
+  if (isLoading) {
+    return <Spin size="large" style={{ padding: "1rem" }} />;
+  }
+
   return (
     <Flex vertical align="center" style={postsPagesStyle}>
-      {isLoading ? (
-        <Spin />
-      ) : (
+      {user ? (
         <>
-          {user ? (
-            <>
-              <ComponentWrapper className="form_wrapper">
-                <UserInfo user={user} />
-              </ComponentWrapper>
-              <Posts posts={userPosts} />
-            </>
-          ) : (
-            <FailureMessage />
-          )}
+          <ComponentWrapper className="form_wrapper">
+            <UserInfo user={user} />
+          </ComponentWrapper>
+          <Posts posts={userPosts} />
         </>
+      ) : (
+        <FailureMessage />
       )}
     </Flex>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Alert, Button, Form, Input } from "antd";
-import { login } from "../../../rest/UserRequests";
+import { Alert, Button, Form, Input, Spin } from "antd";
+import { login } from "../../../rest/userRequests";
 import {
   authFormItemLayout,
   authTailFormItemLayout,
@@ -22,11 +22,11 @@ type FieldType = {
 const Login: React.FC = () => {
   const { setIsLoggedIn, setUser } = useGlobalContext();
   const [isFailed, setFailed] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  console.log(isFailed);
-
   const onFinish = async (values: any) => {
+    setLoading(true);
     const loginResponse = await login(values);
     if (loginResponse !== undefined) {
       const user: User = {
@@ -41,7 +41,12 @@ const Login: React.FC = () => {
     } else {
       setFailed(true);
     }
+    setLoading(false);
   };
+
+  if (isLoading) {
+    return <Spin />;
+  }
 
   return (
     <>
@@ -76,6 +81,7 @@ const Login: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
+
       {isFailed ? <Alert message="Login Failed" type="error" /> : null}
     </>
   );

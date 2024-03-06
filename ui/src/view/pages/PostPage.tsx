@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Spin } from "antd";
-import { getPostById } from "../../rest/PostRequests";
-import { Post } from "../../rest/common";
+import { getPostById } from "../../rest/postRequests";
 import PostCard from "../components/posts/PostCard";
 import { useParams } from "react-router-dom";
-import { getAllCommentsByPostId } from "../../rest/CommentRequests";
+import { getAllCommentsByPostId } from "../../rest/commentRequests";
 import Comments from "../components/comments/Comments";
 
 import { useGlobalContext } from "../../state/state";
@@ -22,8 +21,8 @@ const PostPage: React.FC = () => {
       const post = await getPostById(postId);
       if (post !== undefined) {
         setPostPage(post);
-        setLoadingPost(false);
       }
+      setLoadingPost(false);
 
       const comments = await getAllCommentsByPostId(postId);
       setComments(comments);
@@ -32,26 +31,20 @@ const PostPage: React.FC = () => {
     getPost(postId || "");
   }, [postId]);
 
+  if (isLoadingPost) {
+    return <Spin size="large" style={{ padding: "1rem" }} />;
+  }
+
   return (
     <div style={postsPagesStyle}>
       <Flex vertical gap="middle" justify="center" align="center">
-        {isLoadingPost ? (
-          <Spin />
-        ) : (
+        {postPage !== undefined ? (
           <>
-            {postPage !== undefined ? (
-              <>
-                <PostCard post={postPage} />
-                {isLoadingComments ? (
-                  <Spin />
-                ) : (
-                  <Comments comments={comments} />
-                )}
-              </>
-            ) : (
-              <FailureMessage />
-            )}
+            <PostCard post={postPage} />
+            {isLoadingComments ? <Spin /> : <Comments comments={comments} />}
           </>
+        ) : (
+          <FailureMessage />
         )}
       </Flex>
     </div>

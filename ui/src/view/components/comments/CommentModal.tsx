@@ -4,7 +4,7 @@ import { buttonStyle } from "../../../styles/global";
 import { useGlobalContext } from "../../../state/state";
 import CommentForm, { CommentValues } from "./CommentModalForm";
 import { Comment } from "../../../rest/common";
-import { createComment, updateComment } from "../../../rest/CommentRequests";
+import { createComment, updateComment } from "../../../rest/commentRequests";
 import { useParams } from "react-router-dom";
 import { EditOutlined } from "@ant-design/icons";
 

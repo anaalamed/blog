@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, type FormInstance } from "antd";
 import { buttonStyle } from "../../../styles/global";
-import { createPost, updatePost } from "../../../rest/PostRequests";
+import { createPost, updatePost } from "../../../rest/postRequests";
 import { useGlobalContext } from "../../../state/state";
 import PostForm, { PostValues } from "./PostModalForm";
 import { Post } from "../../../rest/common";

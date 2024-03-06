@@ -76,6 +76,15 @@ public class PostController {
         postService.getPostsByUserId(userId).stream().map(this::getPostResponse).toList());
   }
 
+  @RequestMapping(method = RequestMethod.GET, path = "/search")
+  public ResponseEntity<?> getPostsByTitleOrContentContaining(
+      @RequestParam(value = "q") String value) {
+    return ResponseEntity.ok(
+        postService.getPostsByTitleOrContentContaining(value).stream()
+            .map(this::getPostResponse)
+            .toList());
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<?> getPostById(@PathVariable int id) {
     Optional<PostResponse> postResponse = postService.getPostById(id).map(this::getPostResponse);

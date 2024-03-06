@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 
-import { Alert, Button, Form, Input, Result } from "antd";
+import { Alert, Button, Form, Input, Result, Spin } from "antd";
 import {
   authFormItemLayout,
   authTailFormItemLayout,
   buttonStyle,
 } from "../../../styles/global";
-import { signup } from "../../../rest/UserRequests";
+import { signup } from "../../../rest/userRequests";
 import { Link } from "react-router-dom";
 
 const Signup: React.FC = () => {
   const [form] = Form.useForm();
   const [isSuccess, setSuccess] = useState(false);
   const [isFailed, setFailed] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const onFinish = async (values: any) => {
+    setLoading(true);
     console.log("Received values of form: ", values);
     const user = await signup(values);
     if (user !== undefined) {
@@ -22,8 +24,13 @@ const Signup: React.FC = () => {
     } else {
       setFailed(true);
     }
+    setLoading(false);
     form.resetFields();
   };
+
+  if (isLoading) {
+    return <Spin />;
+  }
 
   return (
     <>
@@ -117,6 +124,7 @@ const Signup: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
+
           {isFailed ? <Alert message="Sign Up Failed" type="error" /> : null}
         </>
       )}

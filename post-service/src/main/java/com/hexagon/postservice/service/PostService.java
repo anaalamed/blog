@@ -43,6 +43,11 @@ public class PostService {
     return postRepository.findAllByUserIdOrderByCreationTimeDesc(userId);
   }
 
+  public List<Post> getPostsByTitleOrContentContaining(String value) {
+    return postRepository.findAllByTitleContainingOrContentContainingOrderByCreationTimeDesc(
+        value, value);
+  }
+
   public Optional<Post> getPostById(int id) {
     return postRepository.findById(id);
   }
