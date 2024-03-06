@@ -5,7 +5,6 @@ import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.authservice.model.User;
 import com.hexagon.authservice.service.AuthService;
 import com.hexagon.authservice.utils.InputValidations;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,23 +49,11 @@ public class AuthController {
 
   @RequestMapping(method = RequestMethod.GET, path = "/user")
   public ResponseEntity<?> getUserByToken(@RequestParam(value = "token") String token) {
-    Optional<UserResponse> userResponse = authService.getUserByToken(token);
-
-    if (userResponse.isPresent()) {
-      return ResponseEntity.ok(userResponse.get());
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+    return ResponseEntity.of(authService.getUserByToken(token));
   }
 
   @RequestMapping(method = RequestMethod.GET, path = "/user/{id}")
   public ResponseEntity<?> getUserById(@PathVariable int id) {
-    Optional<UserResponse> userResponse = authService.getUserById(id);
-
-    if (userResponse.isPresent()) {
-      return ResponseEntity.ok(userResponse.get());
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+    return ResponseEntity.of(authService.getUserById(id));
   }
 }
