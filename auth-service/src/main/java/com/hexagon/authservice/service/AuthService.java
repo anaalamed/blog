@@ -19,7 +19,7 @@ public class AuthService {
   private static final Logger logger = LogManager.getLogger(AuthService.class.getName());
   @Autowired private UserRepository userRepository;
 
-  Map<Integer, String> tokens = new HashMap<>();
+  Map<String, Integer> tokens = new HashMap<>();
 
   public UserResponse createUser(UserRequest userRequest) {
     User user = new User(userRequest);
@@ -44,7 +44,7 @@ public class AuthService {
     }
 
     String token = AuthUtils.generateUniqueToken();
-    tokens.put(user.get().getId(), token);
+    tokens.put(token, user.get().getId());
 
     UserResponse userResponse = new UserResponse(user.get());
     logger.info("User {} logged in", userResponse);
@@ -56,16 +56,10 @@ public class AuthService {
   }
 
   public Optional<UserResponse> getUserByToken(String token) {
-    Optional<Integer> userId =
-        tokens.entrySet().stream()
-            .filter(entry -> token.equals(entry.getValue()))
-            .map(Map.Entry::getKey)
-            .findFirst();
-
-    if (userId.isEmpty()) {
+    if (!tokens.containsKey(token)) {
       return Optional.empty();
     }
 
-    return userRepository.findById(userId.get()).map(UserResponse::new);
+    return userRepository.findById(tokens.get(token)).map(UserResponse::new);
   }
 }
