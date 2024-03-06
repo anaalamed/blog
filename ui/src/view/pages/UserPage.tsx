@@ -3,17 +3,18 @@ import { Flex, Spin } from "antd";
 import UserInfo from "../components/user/UserInfo";
 import { useParams } from "react-router-dom";
 import { getUserById } from "../../rest/UserRequests";
-import { Post, User } from "../../rest/common";
+import { User } from "../../rest/common";
 import { getPostsByUserId } from "../../rest/PostRequests";
 import Posts from "../components/posts/Posts";
 import { ComponentWrapper, postsPagesStyle } from "../../styles/global";
 import FailureMessage from "../components/FailureMessage";
+import { useGlobalContext } from "../../state/state";
 
 const UserPage: React.FC = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<User>();
-  const [posts, setPosts] = useState<Post[]>([]);
   const params = useParams();
+  const { userPosts, setUserPosts } = useGlobalContext();
 
   useEffect(() => {
     async function getUser(userId: string) {
@@ -22,7 +23,7 @@ const UserPage: React.FC = () => {
         setUser(user);
 
         const posts = await getPostsByUserId(userId);
-        setPosts(posts);
+        setUserPosts(posts);
       }
       setLoading(false);
     }
@@ -41,7 +42,7 @@ const UserPage: React.FC = () => {
               <ComponentWrapper className="form_wrapper">
                 <UserInfo user={user} />
               </ComponentWrapper>
-              <Posts posts={posts} />
+              <Posts posts={userPosts} />
             </>
           ) : (
             <FailureMessage />

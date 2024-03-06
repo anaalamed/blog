@@ -12,17 +12,16 @@ import { postsPagesStyle } from "../../styles/global";
 import FailureMessage from "../components/FailureMessage";
 
 const PostPage: React.FC = () => {
-  const [post, setPost] = useState<Post>();
   const [isLoadingPost, setLoadingPost] = useState<boolean>(true);
   const [isLoadingComments, setLoadingComments] = useState<boolean>(true);
   const { postId } = useParams();
-  const { comments, setComments } = useGlobalContext();
+  const { comments, setComments, postPage, setPostPage } = useGlobalContext();
 
   useEffect(() => {
     async function getPost(postId: string) {
       const post = await getPostById(postId);
       if (post !== undefined) {
-        setPost(post);
+        setPostPage(post);
         setLoadingPost(false);
       }
 
@@ -40,9 +39,9 @@ const PostPage: React.FC = () => {
           <Spin />
         ) : (
           <>
-            {post !== undefined ? (
+            {postPage !== undefined ? (
               <>
-                <PostCard post={post} />
+                <PostCard post={postPage} />
                 {isLoadingComments ? (
                   <Spin />
                 ) : (

@@ -6,6 +6,7 @@ import { useGlobalContext } from "../../../state/state";
 import PostForm, { PostValues } from "./PostModalForm";
 import { Post } from "../../../rest/common";
 import { EditOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 
 interface PostCreateFormModalProps {
   open: boolean;
@@ -23,10 +24,30 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   isNew,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
-  const { posts, setPosts, user } = useGlobalContext();
+  const { allPosts, setAllPosts, user, setPostPage, userPosts, setUserPosts } =
+    useGlobalContext();
+  const location = useLocation();
 
   const title = isNew ? "Create a new post" : "Update the post";
   const okText = isNew ? "Create" : "Update";
+
+  // Update post: update different state according to page (all posts, user's posts or post page)
+  const updateStatePost = (updatedPost: Post) => {
+    if (location.pathname === "/") {
+      const updatedPostIndex = allPosts.findIndex(
+        (e) => e.id === updatedPost.id
+      );
+      allPosts[updatedPostIndex] = updatedPost;
+    } else if (location.pathname.includes("post")) {
+      setPostPage(updatedPost);
+    } else if (location.pathname.includes("user")) {
+      const updatedPostIndex = userPosts.findIndex(
+        (e) => e.id === updatedPost.id
+      );
+      userPosts[updatedPostIndex] = updatedPost;
+      setUserPosts(userPosts);
+    }
+  };
 
   return (
     <Modal
@@ -45,7 +66,7 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
           if (isNew) {
             const newPost = await createPost(values, user?.token || "");
             if (newPost !== undefined) {
-              posts.unshift(newPost);
+              allPosts.unshift(newPost);
             }
           } else {
             const updatedPost = await updatePost(
@@ -54,14 +75,11 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
               initialValues.id
             );
             if (updatedPost !== undefined) {
-              const updatedPostIndex = posts.findIndex(
-                (e) => e.id === updatedPost.id
-              );
-              posts[updatedPostIndex] = updatedPost;
+              updateStatePost(updatedPost);
             }
           }
-          const newPosts: Post[] = [...posts];
-          setPosts(newPosts);
+          const newPosts: Post[] = [...allPosts];
+          setAllPosts(newPosts);
         } catch (error) {
           console.log("Failed:", error);
         }

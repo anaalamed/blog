@@ -5,19 +5,19 @@ import { useGlobalContext } from "../../state/state";
 import { Spin } from "antd";
 
 const HomePage: React.FC = () => {
-  const { setPosts, posts } = useGlobalContext();
+  const { setAllPosts, allPosts } = useGlobalContext();
   const [isLoading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function getPosts() {
       const posts = await getAllPosts();
-      setPosts(posts);
+      setAllPosts(posts);
       setLoading(false);
     }
     getPosts();
   }, []);
 
-  return <>{isLoading ? <Spin /> : <Posts posts={posts} />}</>;
+  return <>{isLoading ? <Spin /> : <Posts posts={allPosts} />}</>;
 };
 
 export default HomePage;

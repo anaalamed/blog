@@ -6,10 +6,14 @@ export type GlobalContent = {
   setIsLoggedIn: (c: boolean) => void;
   user?: User | undefined;
   setUser: (c: User | undefined) => void;
-  posts: Post[];
-  setPosts: (c: Post[]) => void;
+  allPosts: Post[];
+  setAllPosts: (c: Post[]) => void;
+  postPage: Post | undefined;
+  setPostPage: (c: Post) => void;
   comments: Comment[];
   setComments: (c: Comment[]) => void;
+  userPosts: Post[];
+  setUserPosts: (c: Post[]) => void;
 };
 
 export const MyGlobalContext = createContext<GlobalContent>({
@@ -17,10 +21,14 @@ export const MyGlobalContext = createContext<GlobalContent>({
   setIsLoggedIn: () => {},
   user: undefined,
   setUser: () => {},
-  posts: [],
-  setPosts: () => {},
+  allPosts: [],
+  setAllPosts: () => {},
+  postPage: undefined,
+  setPostPage: () => {},
   comments: [],
   setComments: () => {},
+  userPosts: [],
+  setUserPosts: () => {},
 });
 
 export const useGlobalContext = () => useContext(MyGlobalContext);
