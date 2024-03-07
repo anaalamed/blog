@@ -38,6 +38,7 @@ const Login: React.FC = () => {
       setUser(user);
       setIsLoggedIn(true);
       navigate("/");
+      sessionStorage.setItem("user", JSON.stringify(user));
     } else {
       setFailed(true);
     }

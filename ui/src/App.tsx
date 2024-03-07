@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
 import { GlobalStyles } from "./styles/global";
 import { Route, Routes } from "react-router-dom";
@@ -46,6 +46,14 @@ const App: React.FC = () => {
   const [postPage, setPostPage] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [userPosts, setUserPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const loggedInUser = sessionStorage.getItem("user");
+    if (loggedInUser) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(loggedInUser));
+    }
+  }, []);
 
   return (
     <Layout style={layoutStyle}>
