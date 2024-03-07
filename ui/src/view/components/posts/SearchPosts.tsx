@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Flex, Input } from "antd";
 import type { SearchProps } from "antd/es/input/Search";
-import { getPostsByTitleOrContent } from "../../../rest/postRequests";
-import { useGlobalContext } from "../../../state/state";
+import { useNavigate } from "react-router-dom";
 
 const { Search } = Input;
 
@@ -12,15 +11,13 @@ const searchStyle = {
 };
 
 const SearchPosts: React.FC = () => {
-  const { setAllPosts } = useGlobalContext();
+  const [value, setValue] = useState<string>("");
+  const navigate = useNavigate();
 
   const onSearch: SearchProps["onSearch"] = async (value, _e, info) => {
     console.log(info?.source, value);
-    setAllPosts([]);
-    const posts = await getPostsByTitleOrContent(value);
-    if (posts !== undefined) {
-      setAllPosts(posts);
-    }
+    navigate(`?q=${value}`);
+    setValue("");
   };
 
   return (
@@ -31,6 +28,8 @@ const SearchPosts: React.FC = () => {
         style={searchStyle}
         onSearch={onSearch}
         enterButton
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
       />
     </Flex>
   );
