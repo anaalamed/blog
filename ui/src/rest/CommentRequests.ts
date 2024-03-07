@@ -1,5 +1,6 @@
+import axios from "axios";
 import { CommentValues } from "../view/components/comments/CommentModalForm";
-import { User, Comment, baseUrl } from "./common";
+import { Comment, baseUrl } from "./common";
 
 const commentsUrl = baseUrl.concat("/comment");
 
@@ -7,8 +8,8 @@ export const getAllCommentsByPostId = async (
   postId: string
 ): Promise<Comment[]> => {
   try {
-    const res = await fetch(commentsUrl.concat(`?postId=${postId}`));
-    const listRes: any[] = await res.json();
+    const res = await axios(commentsUrl.concat(`?postId=${postId}`));
+    const listRes: any[] = await res.data;
     return listRes.map((e) => createCommentFromResponse(e));
   } catch (e) {
     console.log("Error occured during fetching comments: ", e);
@@ -22,21 +23,21 @@ export const createComment = async (
   postId: any
 ): Promise<Comment | undefined> => {
   try {
-    const res = await fetch(commentsUrl.concat("/addComment"), {
+    const res = await axios(commentsUrl.concat("/addComment"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         charset: "utf-8",
         token: token,
       },
-      body: JSON.stringify({ content: data.content, postId: postId }),
+      data: JSON.stringify({ content: data.content, postId: postId }),
     });
 
-    const commentRes: any = await res.json();
+    const commentRes: any = await res.data;
     console.log("New Comment was created: ", commentRes);
     return createCommentFromResponse(commentRes);
   } catch (e) {
-    console.error("Create comment failed ");
+    console.error("Create comment failed: ", e);
     return undefined;
   }
 };
@@ -47,28 +48,28 @@ export const updateComment = async (
   id: any
 ): Promise<Comment | undefined> => {
   try {
-    const res = await fetch(commentsUrl.concat(`/editComment/${id}`), {
+    const res = await axios(commentsUrl.concat(`/editComment/${id}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         charset: "utf-8",
         token: token,
       },
-      body: JSON.stringify({ content: data.content }),
+      data: JSON.stringify({ content: data.content }),
     });
 
-    const commentRes: any = await res.json();
+    const commentRes: any = await res.data;
     console.log("The Comment was updated: ", commentRes);
     return createCommentFromResponse(commentRes);
   } catch (e) {
-    console.error("Update comment failed ");
+    console.error("Update comment failed: ", e);
     return undefined;
   }
 };
 
 export const deleteComment = async (token: string, id: any): Promise<void> => {
   try {
-    const res = await fetch(commentsUrl.concat(`/deleteComment/${id}`), {
+    const res = await axios(commentsUrl.concat(`/deleteComment/${id}`), {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +80,7 @@ export const deleteComment = async (token: string, id: any): Promise<void> => {
 
     console.log("The Comment was deleted");
   } catch (e) {
-    console.error("Delete comment failed: ");
+    console.error("Delete comment failed: ", e);
   }
 };
 
