@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import { Form, type FormInstance } from "antd";
 import TextArea from "antd/es/input/TextArea";
-
-export interface CommentValues {
-  content?: string;
-  id?: any;
-  postId?: any;
-}
+import { CommentValues } from "../../../rest/commentRequests";
 
 interface CommentFormProps {
   initialValues: CommentValues;

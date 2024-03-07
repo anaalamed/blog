@@ -1,6 +1,6 @@
 import React from "react";
 import { Divider, Flex } from "antd";
-import { Comment } from "../../../rest/common";
+import { Comment } from "../../../rest/commentRequests";
 import CommentCard from "./CommentCard";
 import { useGlobalContext } from "../../../state/state";
 import CommentModal from "./CommentModal";

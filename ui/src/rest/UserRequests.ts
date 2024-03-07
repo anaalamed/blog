@@ -1,14 +1,29 @@
 import axios from "axios";
-import { User, baseUrl } from "./common";
+import { baseUrl } from "./common";
 
 const authUrl = baseUrl.concat("/auth");
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  token: string;
+}
+
+export interface UserValues {
+  name?: string;
+  email: string;
+  password: string;
+}
 
 export interface LoginResponse {
   token: string;
   userResponse: User;
 }
 
-export const login = async (data: any): Promise<LoginResponse | undefined> => {
+export const login = async (
+  data: UserValues
+): Promise<LoginResponse | undefined> => {
   try {
     const res = await axios(authUrl.concat("/login"), {
       method: "POST",
@@ -16,7 +31,7 @@ export const login = async (data: any): Promise<LoginResponse | undefined> => {
         "Content-Type": "application/json",
         charset: "utf-8",
       },
-      data: JSON.stringify({ email: data.email, password: data.password }),
+      data: JSON.stringify(data),
     });
     return await res.data;
   } catch (e) {
@@ -25,7 +40,7 @@ export const login = async (data: any): Promise<LoginResponse | undefined> => {
   }
 };
 
-export const signup = async (data: any): Promise<User | undefined> => {
+export const signup = async (data: UserValues): Promise<User | undefined> => {
   try {
     const res = await axios(authUrl.concat("/signup"), {
       method: "POST",
@@ -33,11 +48,7 @@ export const signup = async (data: any): Promise<User | undefined> => {
         "Content-Type": "application/json",
         charset: "utf-8",
       },
-      data: JSON.stringify({
-        email: data.email,
-        password: data.password,
-        name: data.name,
-      }),
+      data: JSON.stringify(data),
     });
     console.log("New User registered");
     return await res.data;

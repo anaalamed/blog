@@ -8,8 +8,10 @@ import Topbar from "./view/components/Topbar";
 import FooterView from "./view/components/Footer";
 import AuthPage from "./view/pages/AuthPage";
 import { MyGlobalContext } from "./state/state";
-import { Post, User, Comment } from "./rest/common";
+import { Comment } from "./rest/commentRequests";
 import UserPage from "./view/pages/UserPage";
+import { User } from "./rest/userRequests";
+import { Post } from "./rest/postRequests";
 const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {

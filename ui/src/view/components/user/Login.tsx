@@ -1,18 +1,13 @@
 import React, { useState } from "react";
 import { Alert, Button, Form, Input, Spin } from "antd";
-import { login } from "../../../rest/userRequests";
+import { User, UserValues, login } from "../../../rest/userRequests";
 import {
   authFormItemLayout,
   authTailFormItemLayout,
   buttonStyle,
 } from "../../../styles/global";
 import { useGlobalContext } from "../../../state/state";
-import { User } from "../../../rest/common";
 import SuccessModal from "./SuccessModal";
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log("Failed:", errorInfo);
-};
 
 type FieldType = {
   email?: string;
@@ -25,7 +20,7 @@ const Login: React.FC = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isSuccess, setSuccess] = useState(false);
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: UserValues) => {
     setLoading(true);
     const loginResponse = await login(values);
     if (loginResponse !== undefined) {
@@ -61,7 +56,6 @@ const Login: React.FC = () => {
         style={{ maxWidth: 600 }}
         initialValues={{}}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item<FieldType>

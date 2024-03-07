@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex } from "antd";
-import { Post } from "../../../rest/common";
 import PostCard from "./PostCard";
+import { Post } from "../../../rest/postRequests";
 
 const Posts: React.FC<{ posts: Post[] }> = ({ posts }) => {
   return (

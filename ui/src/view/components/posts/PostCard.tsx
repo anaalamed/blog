@@ -1,11 +1,11 @@
 import React from "react";
 import { Card, Button, Flex } from "antd";
-import { Post } from "../../../rest/common";
 import { Link, useLocation } from "react-router-dom";
 import { buttonStyle } from "../../../styles/global";
 import ModalPost from "./PostModal";
 import { useGlobalContext } from "../../../state/state";
 import UserName from "../user/UserName";
+import { Post } from "../../../rest/postRequests";
 
 const cardStyle = {
   backgroundColor: "#EBEAFB",

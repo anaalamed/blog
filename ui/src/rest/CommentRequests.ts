@@ -1,8 +1,23 @@
 import axios from "axios";
-import { CommentValues } from "../view/components/comments/CommentModalForm";
-import { Comment, baseUrl } from "./common";
+import { baseUrl } from "./common";
+import { User } from "./userRequests";
 
 const commentsUrl = baseUrl.concat("/comment");
+
+export interface Comment {
+  id: number;
+  content: string;
+  creationTime: Date;
+  updateTime: Date;
+  author: User;
+  postId: number;
+}
+
+export interface CommentValues {
+  id?: number;
+  content: string;
+  postId: number;
+}
 
 export const getAllCommentsByPostId = async (
   postId: string
@@ -19,8 +34,7 @@ export const getAllCommentsByPostId = async (
 
 export const createComment = async (
   data: CommentValues,
-  token: string,
-  postId: any
+  token: string
 ): Promise<Comment | undefined> => {
   try {
     const res = await axios(commentsUrl.concat("/addComment"), {
@@ -30,10 +44,10 @@ export const createComment = async (
         charset: "utf-8",
         token: token,
       },
-      data: JSON.stringify({ content: data.content, postId: postId }),
+      data: JSON.stringify({ content: data.content, postId: data.postId }),
     });
 
-    const commentRes: any = await res.data;
+    const commentRes = await res.data;
     console.log("New Comment was created: ", commentRes);
     return createCommentFromResponse(commentRes);
   } catch (e) {
@@ -45,10 +59,10 @@ export const createComment = async (
 export const updateComment = async (
   data: CommentValues,
   token: string,
-  id: any
+  commentId: number
 ): Promise<Comment | undefined> => {
   try {
-    const res = await axios(commentsUrl.concat(`/editComment/${id}`), {
+    const res = await axios(commentsUrl.concat(`/editComment/${commentId}`), {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +72,7 @@ export const updateComment = async (
       data: JSON.stringify({ content: data.content }),
     });
 
-    const commentRes: any = await res.data;
+    const commentRes = await res.data;
     console.log("The Comment was updated: ", commentRes);
     return createCommentFromResponse(commentRes);
   } catch (e) {
@@ -67,9 +81,12 @@ export const updateComment = async (
   }
 };
 
-export const deleteComment = async (token: string, id: any): Promise<void> => {
+export const deleteComment = async (
+  token: string,
+  id: number
+): Promise<void> => {
   try {
-    const res = await axios(commentsUrl.concat(`/deleteComment/${id}`), {
+    await axios(commentsUrl.concat(`/deleteComment/${id}`), {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

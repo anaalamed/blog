@@ -6,7 +6,7 @@ import {
   authTailFormItemLayout,
   buttonStyle,
 } from "../../../styles/global";
-import { signup } from "../../../rest/userRequests";
+import { UserValues, signup } from "../../../rest/userRequests";
 import SuccessModal from "./SuccessModal";
 
 const Signup: React.FC = () => {
@@ -15,7 +15,7 @@ const Signup: React.FC = () => {
   const [isFailed, setFailed] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: UserValues) => {
     setLoading(true);
     console.log("Received values of form: ", values);
     const user = await signup(values);

@@ -1,8 +1,23 @@
 import axios from "axios";
-import { PostValues } from "../view/components/posts/PostModalForm";
-import { Post, baseUrl } from "./common";
+import { baseUrl } from "./common";
+import { User } from "./userRequests";
 
 const postUrl = baseUrl.concat("/post");
+
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  creationTime: Date;
+  updateTime: Date;
+  author: User;
+}
+
+export interface PostValues {
+  id?: number;
+  title: string;
+  content: string;
+}
 
 export const getAllPosts = async (): Promise<Post[]> => {
   try {
@@ -20,7 +35,7 @@ export const getPostById = async (
 ): Promise<Post | undefined> => {
   try {
     const res = await axios(postUrl.concat(`/${postId}`));
-    const postRes: any = await res.data;
+    const postRes = await res.data;
     const post: Post = createPostFromResponse(postRes);
     return post;
   } catch (e) {
@@ -65,10 +80,10 @@ export const createPost = async (
         charset: "utf-8",
         token: token,
       },
-      data: JSON.stringify({ title: data.title, content: data.content }),
+      data: JSON.stringify(data),
     });
 
-    const postRes: any = await res.data;
+    const postRes = await res.data;
     console.log("New Post was created: ", postRes);
     return createPostFromResponse(postRes);
   } catch (e) {
@@ -80,7 +95,7 @@ export const createPost = async (
 export const updatePost = async (
   data: PostValues,
   token: string,
-  postId: any
+  postId: number
 ): Promise<Post | undefined> => {
   try {
     const res = await axios(postUrl.concat(`/editPost/${postId}`), {
@@ -90,10 +105,10 @@ export const updatePost = async (
         charset: "utf-8",
         token: token,
       },
-      data: JSON.stringify({ title: data.title, content: data.content }),
+      data: JSON.stringify(data),
     });
 
-    const postRes: any = await res.data;
+    const postRes = await res.data;
     console.log("The Post was updated: ", postRes);
     return createPostFromResponse(postRes);
   } catch (e) {

@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { Button, Modal, type FormInstance } from "antd";
 import { buttonStyle } from "../../../styles/global";
 import { useGlobalContext } from "../../../state/state";
-import CommentForm, { CommentValues } from "./CommentModalForm";
-import { Comment } from "../../../rest/common";
-import { createComment, updateComment } from "../../../rest/commentRequests";
+import CommentForm from "./CommentModalForm";
+import { Comment } from "../../../rest/commentRequests";
+import {
+  CommentValues,
+  createComment,
+  updateComment,
+} from "../../../rest/commentRequests";
 import { useParams } from "react-router-dom";
 import { EditOutlined } from "@ant-design/icons";
 
@@ -13,7 +17,6 @@ interface CommentFormModalProps {
   onCreate: (values: CommentValues) => void;
   onCancel: () => void;
   initialValues: CommentValues;
-  isNew: boolean;
 }
 
 const CommentFormModal: React.FC<CommentFormModalProps> = ({
@@ -21,13 +24,14 @@ const CommentFormModal: React.FC<CommentFormModalProps> = ({
   onCreate,
   onCancel,
   initialValues,
-  isNew,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
   const { comments, setComments, user } = useGlobalContext();
 
-  const title = isNew ? "Create a new comment" : "Update the comment";
-  const okText = isNew ? "Create" : "Update";
+  const title = initialValues.id
+    ? "Update the comment"
+    : "Create a new comment";
+  const okText = initialValues.id ? "Update" : "Create";
 
   return (
     <Modal
@@ -40,15 +44,14 @@ const CommentFormModal: React.FC<CommentFormModalProps> = ({
       destroyOnClose
       onOk={async () => {
         try {
-          const values = await formInstance?.validateFields();
+          const values: CommentValues = {
+            content: await formInstance?.getFieldValue("content"),
+            postId: initialValues.postId,
+          };
           formInstance?.resetFields();
           onCreate(values);
-          if (isNew) {
-            const newComment = await createComment(
-              values,
-              user?.token || "",
-              initialValues.postId
-            );
+          if (!initialValues.id) {
+            const newComment = await createComment(values, user?.token || "");
             if (newComment !== undefined) {
               comments.unshift(newComment);
             }
@@ -96,7 +99,7 @@ const ModalComment: React.FC<{ comment?: Comment }> = ({ comment }) => {
   const title = comment ? <EditOutlined /> : "New Comment";
   const initialValues = comment
     ? { content: comment.content, id: comment.id, postId: comment.postId }
-    : { content: "", postId: postId };
+    : { content: "", postId: Number(postId) || 0 };
 
   return (
     <>
@@ -109,7 +112,6 @@ const ModalComment: React.FC<{ comment?: Comment }> = ({ comment }) => {
         onCreate={onCreate}
         onCancel={() => setOpen(false)}
         initialValues={initialValues}
-        isNew={comment ? false : true}
       />
     </>
   );
