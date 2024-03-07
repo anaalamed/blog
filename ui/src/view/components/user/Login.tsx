@@ -7,8 +7,8 @@ import {
   buttonStyle,
 } from "../../../styles/global";
 import { useGlobalContext } from "../../../state/state";
-import { useNavigate } from "react-router-dom";
 import { User } from "../../../rest/common";
+import SuccessModal from "./SuccessModal";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -23,7 +23,7 @@ const Login: React.FC = () => {
   const { setIsLoggedIn, setUser } = useGlobalContext();
   const [isFailed, setFailed] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+  const [isSuccess, setSuccess] = useState(false);
 
   const onFinish = async (values: any) => {
     setLoading(true);
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
       };
       setUser(user);
       setIsLoggedIn(true);
-      navigate("/");
+      setSuccess(true);
       sessionStorage.setItem("user", JSON.stringify(user));
     } else {
       setFailed(true);
@@ -47,6 +47,10 @@ const Login: React.FC = () => {
 
   if (isLoading) {
     return <Spin />;
+  }
+
+  if (isSuccess) {
+    return <SuccessModal isLogin={true} />;
   }
 
   return (
