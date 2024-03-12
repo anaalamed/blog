@@ -2,16 +2,14 @@ package com.hexagon.authservice.model;
 
 import com.hexagon.authservice.dto.UserRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "user")
 public class User {
   @Id
