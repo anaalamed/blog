@@ -1,6 +1,5 @@
 package com.hexagon.postservice.controller;
 
-import com.hexagon.common.TokenUtils;
 import com.hexagon.common.UserResponseCache;
 import com.hexagon.postservice.dto.PostRequest;
 import com.hexagon.postservice.dto.PostResponse;
@@ -35,30 +34,18 @@ public class PostController {
 
   @PostMapping("/addPost")
   public ResponseEntity<?> addPost(
-      @RequestBody PostRequest postRequest, @RequestHeader String token) {
-    Optional<Integer> authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
-
-    if (authorId.isEmpty()) {
-      logger.info("User is not authorized");
-      return ResponseEntity.badRequest().body("User is not authorized");
-    }
-
-    return ResponseEntity.ok(getPostResponse(postService.addPost(postRequest, authorId.get())));
+      @RequestBody PostRequest postRequest, @RequestAttribute("authorId") int authorId) {
+    return ResponseEntity.ok(getPostResponse(postService.addPost(postRequest, authorId)));
   }
 
   @PutMapping("/editPost/{postId}")
   public ResponseEntity<?> editPost(
-      @RequestBody PostRequest postRequest, @RequestHeader String token, @PathVariable int postId) {
-    Optional<Integer> authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
-
-    if (authorId.isEmpty()) {
-      logger.info("User is not authorized");
-      return ResponseEntity.badRequest().body("User is not authorized");
-    }
-
+      @RequestBody PostRequest postRequest,
+      @RequestAttribute("authorId") int authorId,
+      @PathVariable int postId) {
     try {
       PostResponse postResponse =
-          getPostResponse(postService.editPost(postId, postRequest, authorId.get()));
+          getPostResponse(postService.editPost(postId, postRequest, authorId));
       return ResponseEntity.ok(postResponse);
     } catch (AccessDeniedException e) {
       return ResponseEntity.badRequest().body(e);
