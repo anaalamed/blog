@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Card, Flex } from "antd";
-import { Comment } from "../../../rest/common";
+import { Comment } from "../../../rest/commentRequests";
 import CommentModal from "./CommentModal";
 import { useGlobalContext } from "../../../state/state";
 import { DeleteOutlined } from "@ant-design/icons";

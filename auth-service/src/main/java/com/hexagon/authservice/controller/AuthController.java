@@ -5,11 +5,10 @@ import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.authservice.model.User;
 import com.hexagon.authservice.service.AuthService;
 import com.hexagon.authservice.utils.InputValidations;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,14 +26,11 @@ public class AuthController {
       return ResponseEntity.badRequest().body("Invalid inputs");
     }
 
-    try {
-      UserResponse userResponse = authService.createUser(userRequest);
-      return ResponseEntity.ok(userResponse);
-    } catch (DataIntegrityViolationException e) {
+    Optional<UserResponse> userResponse = authService.createUser(userRequest);
+    if (userResponse.isEmpty()) {
       return ResponseEntity.badRequest().body(userRequest.getEmail() + " Email already exists");
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+    return ResponseEntity.ok(userResponse);
   }
 
   @PostMapping("/login")

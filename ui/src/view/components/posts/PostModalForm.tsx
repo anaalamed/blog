@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import { Form, Input, type FormInstance } from "antd";
 import TextArea from "antd/es/input/TextArea";
-
-export interface PostValues {
-  title?: string;
-  content?: string;
-  id?: number;
-}
+import { PostValues } from "../../../rest/postRequests";
 
 interface PostCreateFormProps {
   initialValues: PostValues;

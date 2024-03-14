@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "antd";
 import { GlobalStyles } from "./styles/global";
 import { Route, Routes } from "react-router-dom";
@@ -8,8 +8,10 @@ import Topbar from "./view/components/Topbar";
 import FooterView from "./view/components/Footer";
 import AuthPage from "./view/pages/AuthPage";
 import { MyGlobalContext } from "./state/state";
-import { Post, User, Comment } from "./rest/common";
+import { Comment } from "./rest/commentRequests";
 import UserPage from "./view/pages/UserPage";
+import { User } from "./rest/userRequests";
+import { Post } from "./rest/postRequests";
 const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -46,6 +48,14 @@ const App: React.FC = () => {
   const [postPage, setPostPage] = useState<Post>();
   const [comments, setComments] = useState<Comment[]>([]);
   const [userPosts, setUserPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const loggedInUser = sessionStorage.getItem("user");
+    if (loggedInUser) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(loggedInUser));
+    }
+  }, []);
 
   return (
     <Layout style={layoutStyle}>

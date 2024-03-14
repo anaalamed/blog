@@ -1,5 +1,7 @@
 import { createContext, useContext } from "react";
-import { Comment, Post, User } from "../rest/common";
+import { Comment } from "../rest/commentRequests";
+import { Post } from "../rest/postRequests";
+import { User } from "../rest/userRequests";
 
 export type GlobalContent = {
   isLoggedIn: boolean;

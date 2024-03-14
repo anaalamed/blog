@@ -4,11 +4,9 @@ import com.hexagon.commentservice.dto.CommentRequest;
 import com.hexagon.commentservice.dto.CommentResponse;
 import com.hexagon.commentservice.entity.Comment;
 import com.hexagon.commentservice.service.CommentService;
-import com.hexagon.common.TokenUtils;
 import com.hexagon.common.UserResponseCache;
 import com.hexagon.postservice.dto.PostResponse;
 import java.nio.file.AccessDeniedException;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,37 +35,23 @@ public class CommentController {
 
   @PostMapping("/addComment")
   public ResponseEntity<?> addComment(
-      @RequestBody CommentRequest commentRequest, @RequestHeader String token) {
-    Optional<Integer> authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
-
-    if (authorId.isEmpty()) {
-      logger.info("User is not authorized");
-      return ResponseEntity.badRequest().body("User is not authorized");
-    }
-
+      @RequestBody CommentRequest commentRequest, @RequestAttribute("authorId") int authorId) {
     if (!isPostExist(commentRequest.getPostId())) {
       logger.info("Post doesn't exist");
       return ResponseEntity.badRequest().body("Post doesn't exist");
     }
     return ResponseEntity.ok(
-        getCommentResponse(commentService.addComment(commentRequest, authorId.get())));
+        getCommentResponse(commentService.addComment(commentRequest, authorId)));
   }
 
   @PutMapping("/editComment/{commentId}")
   public ResponseEntity<?> editComment(
       @RequestBody CommentRequest commentRequest,
-      @RequestHeader String token,
+      @RequestAttribute("authorId") int authorId,
       @PathVariable int commentId) {
-    Optional<Integer> authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
-
-    if (authorId.isEmpty()) {
-      logger.info("User is not authorized");
-      return ResponseEntity.badRequest().body("User is not authorized");
-    }
-
     try {
       CommentResponse commentResponse =
-          getCommentResponse(commentService.editComment(commentId, commentRequest, authorId.get()));
+          getCommentResponse(commentService.editComment(commentId, commentRequest, authorId));
       return ResponseEntity.ok(commentResponse);
     } catch (AccessDeniedException | RuntimeException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
@@ -75,16 +59,10 @@ public class CommentController {
   }
 
   @DeleteMapping("/deleteComment/{commentId}")
-  public ResponseEntity<?> deleteComment(@RequestHeader String token, @PathVariable int commentId) {
-    Optional<Integer> authorId = TokenUtils.getUserIdFromToken(restTemplate, token);
-
-    if (authorId.isEmpty()) {
-      logger.info("User is not authorized");
-      return ResponseEntity.badRequest().body("User is not authorized");
-    }
-
+  public ResponseEntity<?> deleteComment(
+      @RequestAttribute("authorId") int authorId, @PathVariable int commentId) {
     try {
-      commentService.deleteComment(commentId, authorId.get());
+      commentService.deleteComment(commentId, authorId);
       return ResponseEntity.ok().build();
     } catch (AccessDeniedException | RuntimeException e) {
       return ResponseEntity.badRequest().body(e.getMessage());

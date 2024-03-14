@@ -1,8 +1,9 @@
 import React from "react";
 import { Descriptions } from "antd";
 import type { DescriptionsProps } from "antd";
+import { User } from "../../../rest/userRequests";
 
-const UserInfo: React.FC<{ user: any }> = ({ user }) => {
+const UserInfo: React.FC<{ user: User }> = ({ user }) => {
   const items: DescriptionsProps["items"] = [
     {
       key: "1",

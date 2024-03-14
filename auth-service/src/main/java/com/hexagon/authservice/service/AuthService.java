@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,13 +22,17 @@ public class AuthService {
 
   Map<String, Integer> tokens = new ConcurrentHashMap<>();
 
-  public UserResponse createUser(UserRequest userRequest) {
+  public Optional<UserResponse> createUser(UserRequest userRequest) {
     User user = new User(userRequest);
     user.setPassword(AuthUtils.hashPassword(userRequest.getPassword()));
-    UserResponse userResponse = new UserResponse(userRepository.save(user));
 
-    logger.info("User {} was created", userResponse);
-    return userResponse;
+    try {
+      UserResponse userResponse = new UserResponse(userRepository.save(user));
+      logger.info("User {} was created", userResponse);
+      return Optional.of(userResponse);
+    } catch (DataIntegrityViolationException e) {
+      return Optional.empty();
+    }
   }
 
   public Optional<LoginResponse> login(String email, String password) {

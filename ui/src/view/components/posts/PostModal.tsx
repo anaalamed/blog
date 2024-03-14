@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Button, Modal, type FormInstance } from "antd";
 import { buttonStyle } from "../../../styles/global";
-import { createPost, updatePost } from "../../../rest/postRequests";
+import {
+  Post,
+  PostValues,
+  createPost,
+  updatePost,
+} from "../../../rest/postRequests";
 import { useGlobalContext } from "../../../state/state";
-import PostForm, { PostValues } from "./PostModalForm";
-import { Post } from "../../../rest/common";
+import PostForm from "./PostModalForm";
 import { EditOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 
@@ -13,7 +17,6 @@ interface PostCreateFormModalProps {
   onCreate: (values: PostValues) => void;
   onCancel: () => void;
   initialValues: PostValues;
-  isNew: boolean;
 }
 
 const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
@@ -21,15 +24,14 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   onCreate,
   onCancel,
   initialValues,
-  isNew,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
   const { allPosts, setAllPosts, user, setPostPage, userPosts, setUserPosts } =
     useGlobalContext();
   const location = useLocation();
 
-  const title = isNew ? "Create a new post" : "Update the post";
-  const okText = isNew ? "Create" : "Update";
+  const title = initialValues.id ? "Update the post" : "Create a new post";
+  const okText = initialValues.id ? "Update" : "Create";
 
   // Update post: update different state according to page (all posts, user's posts or post page)
   const updateStatePost = (updatedPost: Post) => {
@@ -63,16 +65,18 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
           const values = await formInstance?.validateFields();
           formInstance?.resetFields();
           onCreate(values);
-          if (isNew) {
+          if (!initialValues.id) {
+            // create a new post
             const newPost = await createPost(values, user?.token || "");
             if (newPost !== undefined) {
               allPosts.unshift(newPost);
             }
           } else {
+            // update an exisiting post
             const updatedPost = await updatePost(
               values,
               user?.token || "",
-              initialValues.id
+              initialValues?.id
             );
             if (updatedPost !== undefined) {
               updateStatePost(updatedPost);
@@ -106,9 +110,10 @@ const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
   };
 
   const title = post ? <EditOutlined /> : "New Post";
-  const initialValues = post
-    ? { title: post.title, content: post.content, id: post.id }
-    : { title: "", content: "" };
+  const initialValues =
+    post !== undefined
+      ? { title: post.title, content: post.content, id: post.id }
+      : { title: "", content: "" };
 
   return (
     <>
@@ -121,7 +126,6 @@ const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
         onCreate={onCreate}
         onCancel={() => setOpen(false)}
         initialValues={initialValues}
-        isNew={post ? false : true}
       />
     </>
   );
