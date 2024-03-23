@@ -32,13 +32,13 @@ const PostCard: React.FC<{ post: Post }> = ({ post }) => {
       extra={
         <div style={titleStyle}>
           <Flex align="center" gap={10}>
+            {isLoggedIn && user?.id === post.author.id ? (
+              <ModalPost post={post} />
+            ) : null}
             <div>
               <UserName user={post.author} />
               <div>{post.creationTime.toLocaleString()}</div>
             </div>
-            {isLoggedIn && user?.id === post.author.id ? (
-              <ModalPost post={post} />
-            ) : null}
           </Flex>
         </div>
       }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { baseUrl, headers } from "./common";
 import { User } from "./userRequests";
+import Cookies from "js-cookie";
 
 const commentsUrl = baseUrl.concat("/comment");
 
@@ -38,7 +39,7 @@ export const createComment = async (
   try {
     const res = await axios(commentsUrl.concat("/addComment"), {
       method: "POST",
-      headers: headers,
+      headers: { ...headers, Authorization: Cookies.get("Authorization") },
       data: JSON.stringify({ content: data.content, postId: data.postId }),
     });
 
@@ -58,7 +59,7 @@ export const updateComment = async (
   try {
     const res = await axios(commentsUrl.concat(`/editComment/${commentId}`), {
       method: "PUT",
-      headers: headers,
+      headers: { ...headers, Authorization: Cookies.get("Authorization") },
       data: JSON.stringify({ content: data.content }),
     });
 
@@ -75,7 +76,7 @@ export const deleteComment = async (id: number): Promise<void> => {
   try {
     await axios(commentsUrl.concat(`/deleteComment/${id}`), {
       method: "DELETE",
-      headers: headers,
+      headers: { ...headers, Authorization: Cookies.get("Authorization") },
     });
 
     console.log("The Comment was deleted");

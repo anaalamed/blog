@@ -26,7 +26,7 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
   initialValues,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
-  const { allPosts, setAllPosts, user, setPostPage, userPosts, setUserPosts } =
+  const { allPosts, setAllPosts, setPostPage, userPosts, setUserPosts } =
     useGlobalContext();
   const location = useLocation();
 
@@ -96,12 +96,10 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
 };
 
 const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
-  const [formValues, setFormValues] = useState<PostValues>();
   const [open, setOpen] = useState(false);
 
   const onCreate = (values: PostValues) => {
     console.log("Received values of form: ", values);
-    setFormValues(values);
     setOpen(false);
   };
 
@@ -116,7 +114,6 @@ const ModalPost: React.FC<{ post?: Post }> = ({ post }) => {
       <Button type="primary" onClick={() => setOpen(true)} style={buttonStyle}>
         {title}
       </Button>
-      {/* <pre>{JSON.stringify(formValues, null, 2)}</pre> */}
       <PostCreateFormModal
         open={open}
         onCreate={onCreate}

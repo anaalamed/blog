@@ -11,7 +11,7 @@ const Posts: React.FC<{ posts: Post[] }> = ({ posts }) => {
         gap="middle"
         justify="center"
         align="center"
-        style={{ padding: "1rem" }}
+        style={{ padding: "1rem", width: "100%", margin: "0 auto" }}
       >
         {posts.map((post: Post) => (
           <PostCard key={post.id} post={post} />
