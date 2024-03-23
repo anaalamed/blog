@@ -43,11 +43,6 @@ public class AuthController {
     return ResponseEntity.of(authService.login(user.getEmail(), user.getPassword()));
   }
 
-  @RequestMapping(method = RequestMethod.GET, path = "/user")
-  public ResponseEntity<?> getUserByToken(@RequestParam(value = "token") String token) {
-    return ResponseEntity.of(authService.getUserByToken(token));
-  }
-
   @RequestMapping(method = RequestMethod.GET, path = "/user/{id}")
   public ResponseEntity<?> getUserById(@PathVariable int id) {
     return ResponseEntity.of(authService.getUserById(id));
