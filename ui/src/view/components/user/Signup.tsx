@@ -21,11 +21,11 @@ const Signup: React.FC = () => {
     const user = await signup(values);
     if (user !== undefined) {
       setSuccess(true);
+      form.resetFields();
     } else {
       setFailed(true);
     }
     setLoading(false);
-    form.resetFields();
   };
 
   if (isLoading) {
@@ -45,6 +45,7 @@ const Signup: React.FC = () => {
         onFinish={onFinish}
         style={{ maxWidth: 600 }}
         scrollToFirstError
+        id="signup_form"
       >
         <Form.Item
           name="name"
@@ -85,6 +86,10 @@ const Signup: React.FC = () => {
               required: true,
               message: "Please input your password!",
             },
+            {
+              pattern: new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"),
+              message: "Minimum 8 characters, at least 1 letter and 1 number",
+            },
           ]}
           hasFeedback
         >
@@ -106,9 +111,7 @@ const Signup: React.FC = () => {
                 if (!value || getFieldValue("password") === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(
-                  new Error("The new password that you entered do not match!")
-                );
+                return Promise.reject(new Error("The password do not match!"));
               },
             }),
           ]}
@@ -117,7 +120,13 @@ const Signup: React.FC = () => {
         </Form.Item>
 
         <Form.Item {...authTailFormItemLayout}>
-          <Button type="primary" htmlType="submit" style={buttonStyle}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={buttonStyle}
+            id="signup_btn"
+          >
+            {" "}
             Sign Up
           </Button>
         </Form.Item>
