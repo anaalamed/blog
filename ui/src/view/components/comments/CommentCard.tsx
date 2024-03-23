@@ -24,7 +24,7 @@ const CommentCard: React.FC<{ comment: Comment }> = ({ comment }) => {
   const { isLoggedIn, user, setComments, comments } = useGlobalContext();
 
   const onDeleteComment = async () => {
-    await deleteComment(user?.token || "", comment.id);
+    await deleteComment(comment.id);
     const newComments = comments.filter((e) => e.id !== comment.id);
     setComments(newComments);
   };

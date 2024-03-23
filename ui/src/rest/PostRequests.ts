@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseUrl } from "./common";
+import { baseUrl, headers } from "./common";
 import { User } from "./userRequests";
 
 const postUrl = baseUrl.concat("/post");
@@ -69,17 +69,12 @@ export const getPostsByTitleOrContent = async (
 };
 
 export const createPost = async (
-  data: PostValues,
-  token: string
+  data: PostValues
 ): Promise<Post | undefined> => {
   try {
     const res = await axios(postUrl.concat("/addPost"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        charset: "utf-8",
-        token: token,
-      },
+      headers: headers,
       data: JSON.stringify(data),
     });
 
@@ -94,17 +89,12 @@ export const createPost = async (
 
 export const updatePost = async (
   data: PostValues,
-  token: string,
   postId: number
 ): Promise<Post | undefined> => {
   try {
     const res = await axios(postUrl.concat(`/editPost/${postId}`), {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        charset: "utf-8",
-        token: token,
-      },
+      headers: headers,
       data: JSON.stringify(data),
     });
 

@@ -8,6 +8,7 @@ import {
 } from "../../../styles/global";
 import { useGlobalContext } from "../../../state/state";
 import SuccessModal from "./SuccessModal";
+import Cookies from "js-cookie";
 
 type FieldType = {
   email?: string;
@@ -28,12 +29,18 @@ const Login: React.FC = () => {
         id: loginResponse.userResponse.id,
         name: loginResponse.userResponse.name,
         email: loginResponse.userResponse.email,
-        token: loginResponse.token,
       };
       setUser(user);
       setIsLoggedIn(true);
       setSuccess(true);
-      sessionStorage.setItem("user", JSON.stringify(user));
+
+      const cookiesSettings = {
+        // expires in 30 minutes
+        expires: new Date(new Date().getTime() + 30 * 60 * 1000),
+        secure: true,
+      };
+      Cookies.set("Authorization", loginResponse.token, cookiesSettings);
+      Cookies.set("user", JSON.stringify(user), cookiesSettings);
     } else {
       setFailed(true);
     }

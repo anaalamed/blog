@@ -5,10 +5,9 @@ import com.hexagon.authservice.dto.UserRequest;
 import com.hexagon.authservice.dto.UserResponse;
 import com.hexagon.authservice.model.User;
 import com.hexagon.authservice.repository.UserRepository;
-import com.hexagon.authservice.utils.AuthUtils;
-import java.util.Map;
+import com.hexagon.authservice.utils.BcryptPasswordUtils;
+import com.hexagon.authservice.utils.JwtUtil;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +19,9 @@ public class AuthService {
   private static final Logger logger = LogManager.getLogger(AuthService.class.getName());
   @Autowired private UserRepository userRepository;
 
-  Map<String, Integer> tokens = new ConcurrentHashMap<>();
-
   public Optional<UserResponse> createUser(UserRequest userRequest) {
     User user = new User(userRequest);
-    user.setPassword(AuthUtils.hashPassword(userRequest.getPassword()));
+    user.setPassword(BcryptPasswordUtils.hashPassword(userRequest.getPassword()));
 
     try {
       UserResponse userResponse = new UserResponse(userRepository.save(user));
@@ -43,13 +40,12 @@ public class AuthService {
       return Optional.empty();
     }
 
-    if (!AuthUtils.verifyPassword(password, user.get().getPassword())) {
+    if (!BcryptPasswordUtils.verifyPassword(password, user.get().getPassword())) {
       logger.info("User with email {} - password doesn't match", email);
       return Optional.empty();
     }
 
-    String token = AuthUtils.generateUniqueToken();
-    tokens.put(token, user.get().getId());
+    String token = JwtUtil.createToken(user.get().getId(), email, password);
 
     UserResponse userResponse = new UserResponse(user.get());
     logger.info("User {} logged in", userResponse);
@@ -58,13 +54,5 @@ public class AuthService {
 
   public Optional<UserResponse> getUserById(int id) {
     return userRepository.findById(id).map(UserResponse::new);
-  }
-
-  public Optional<UserResponse> getUserByToken(String token) {
-    if (!tokens.containsKey(token)) {
-      return Optional.empty();
-    }
-
-    return userRepository.findById(tokens.get(token)).map(UserResponse::new);
   }
 }

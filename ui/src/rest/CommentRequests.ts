@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseUrl } from "./common";
+import { baseUrl, headers } from "./common";
 import { User } from "./userRequests";
 
 const commentsUrl = baseUrl.concat("/comment");
@@ -33,17 +33,12 @@ export const getAllCommentsByPostId = async (
 };
 
 export const createComment = async (
-  data: CommentValues,
-  token: string
+  data: CommentValues
 ): Promise<Comment | undefined> => {
   try {
     const res = await axios(commentsUrl.concat("/addComment"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        charset: "utf-8",
-        token: token,
-      },
+      headers: headers,
       data: JSON.stringify({ content: data.content, postId: data.postId }),
     });
 
@@ -58,17 +53,12 @@ export const createComment = async (
 
 export const updateComment = async (
   data: CommentValues,
-  token: string,
   commentId: number
 ): Promise<Comment | undefined> => {
   try {
     const res = await axios(commentsUrl.concat(`/editComment/${commentId}`), {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        charset: "utf-8",
-        token: token,
-      },
+      headers: headers,
       data: JSON.stringify({ content: data.content }),
     });
 
@@ -81,18 +71,11 @@ export const updateComment = async (
   }
 };
 
-export const deleteComment = async (
-  token: string,
-  id: number
-): Promise<void> => {
+export const deleteComment = async (id: number): Promise<void> => {
   try {
     await axios(commentsUrl.concat(`/deleteComment/${id}`), {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        charset: "utf-8",
-        token: token,
-      },
+      headers: headers,
     });
 
     console.log("The Comment was deleted");
