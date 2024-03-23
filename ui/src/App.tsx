@@ -12,6 +12,7 @@ import { Comment } from "./rest/commentRequests";
 import UserPage from "./view/pages/UserPage";
 import { User } from "./rest/userRequests";
 import { Post } from "./rest/postRequests";
+import Cookies from "js-cookie";
 const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
@@ -50,7 +51,7 @@ const App: React.FC = () => {
   const [userPosts, setUserPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    const loggedInUser = sessionStorage.getItem("user");
+    const loggedInUser = Cookies.get("user");
     if (loggedInUser) {
       setIsLoggedIn(true);
       setUser(JSON.parse(loggedInUser));

@@ -67,17 +67,13 @@ const PostCreateFormModal: React.FC<PostCreateFormModalProps> = ({
           onCreate(values);
           if (!initialValues.id) {
             // create a new post
-            const newPost = await createPost(values, user?.token || "");
+            const newPost = await createPost(values);
             if (newPost !== undefined) {
               allPosts.unshift(newPost);
             }
           } else {
             // update an exisiting post
-            const updatedPost = await updatePost(
-              values,
-              user?.token || "",
-              initialValues?.id
-            );
+            const updatedPost = await updatePost(values, initialValues?.id);
             if (updatedPost !== undefined) {
               updateStatePost(updatedPost);
             }

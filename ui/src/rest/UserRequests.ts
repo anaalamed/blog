@@ -1,5 +1,5 @@
 import axios from "axios";
-import { baseUrl } from "./common";
+import { baseUrl, headers } from "./common";
 
 const authUrl = baseUrl.concat("/auth");
 
@@ -7,7 +7,6 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  token: string;
 }
 
 export interface UserValues {
@@ -27,10 +26,7 @@ export const login = async (
   try {
     const res = await axios(authUrl.concat("/login"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        charset: "utf-8",
-      },
+      headers: headers,
       data: JSON.stringify(data),
     });
     return await res.data;
@@ -44,10 +40,7 @@ export const signup = async (data: UserValues): Promise<User | undefined> => {
   try {
     const res = await axios(authUrl.concat("/signup"), {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        charset: "utf-8",
-      },
+      headers: headers,
       data: JSON.stringify(data),
     });
     console.log("New User registered");

@@ -26,7 +26,7 @@ const CommentFormModal: React.FC<CommentFormModalProps> = ({
   initialValues,
 }) => {
   const [formInstance, setFormInstance] = useState<FormInstance>();
-  const { comments, setComments, user } = useGlobalContext();
+  const { comments, setComments } = useGlobalContext();
 
   const title = initialValues.id
     ? "Update the comment"
@@ -51,14 +51,13 @@ const CommentFormModal: React.FC<CommentFormModalProps> = ({
           formInstance?.resetFields();
           onCreate(values);
           if (!initialValues.id) {
-            const newComment = await createComment(values, user?.token || "");
+            const newComment = await createComment(values);
             if (newComment !== undefined) {
               comments.unshift(newComment);
             }
           } else {
             const updatedComment = await updateComment(
               values,
-              user?.token || "",
               initialValues.id
             );
             if (updatedComment !== undefined) {
