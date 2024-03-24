@@ -1,6 +1,7 @@
 import axios from "axios";
 import { baseUrl, headers } from "./common";
 import { User } from "./userRequests";
+import Cookies from "js-cookie";
 
 const postUrl = baseUrl.concat("/post");
 
@@ -19,62 +20,13 @@ export interface PostValues {
   content: string;
 }
 
-export const getAllPosts = async (): Promise<Post[]> => {
-  try {
-    const res = await axios(postUrl);
-    const listRes: any[] = await res.data;
-    return listRes.map((e) => createPostFromResponse(e));
-  } catch (e) {
-    console.log("Error occured during fetching posts: ", e);
-    return [];
-  }
-};
-
-export const getPostById = async (
-  postId: string
-): Promise<Post | undefined> => {
-  try {
-    const res = await axios(postUrl.concat(`/${postId}`));
-    const postRes = await res.data;
-    const post: Post = createPostFromResponse(postRes);
-    return post;
-  } catch (e) {
-    console.log("Error occured during fetching post: ", e);
-    return undefined;
-  }
-};
-
-export const getPostsByUserId = async (userId: string): Promise<Post[]> => {
-  try {
-    const res = await axios(postUrl.concat(`/user?userId=${userId}`));
-    const listRes: any[] = await res.data;
-    return listRes.map((e) => createPostFromResponse(e));
-  } catch (e) {
-    console.log("Error occured during fetching posts: ", e);
-    return [];
-  }
-};
-
-export const getPostsByTitleOrContent = async (
-  value: string
-): Promise<Post[]> => {
-  try {
-    const res = await axios(postUrl.concat(`/search?q=${value}`));
-    const listRes: any[] = await res.data;
-    return listRes.map((e) => createPostFromResponse(e));
-  } catch (e) {
-    console.log("Error occured during fetching posts: ", e);
-    return [];
-  }
-};
-
 export const createPost = async (
   data: PostValues
 ): Promise<Post | undefined> => {
   try {
     const res = await axios(postUrl.concat("/addPost"), {
       method: "POST",
-      headers: headers,
+      headers: { ...headers, Authorization: Cookies.get("Authorization") },
       data: JSON.stringify(data),
     });
 
@@ -94,7 +46,7 @@ export const updatePost = async (
   try {
     const res = await axios(postUrl.concat(`/editPost/${postId}`), {
       method: "PUT",
-      headers: headers,
+      headers: { ...headers, Authorization: Cookies.get("Authorization") },
       data: JSON.stringify(data),
     });
 
@@ -104,6 +56,45 @@ export const updatePost = async (
   } catch (e) {
     console.log("Update post failed");
     return undefined;
+  }
+};
+
+export const getPostById = async (
+  postId: string
+): Promise<Post | undefined> => {
+  try {
+    const res = await axios(postUrl.concat(`/${postId}`));
+    const postRes = await res.data;
+    const post: Post = createPostFromResponse(postRes);
+    return post;
+  } catch (e) {
+    console.log("Error occured during fetching post: ", e);
+    return undefined;
+  }
+};
+
+export const getPostsByUserId = async (userId: string): Promise<Post[]> => {
+  return getPosts(postUrl.concat(`/user?userId=${userId}`));
+};
+
+export const getPostsByTitleOrContent = async (
+  value: string
+): Promise<Post[]> => {
+  return getPosts(postUrl.concat(`/search?q=${value}`));
+};
+
+export const getAllPosts = async (): Promise<Post[]> => {
+  return getPosts(postUrl);
+};
+
+const getPosts = async (url: string): Promise<Post[]> => {
+  try {
+    const res = await axios(url);
+    const listRes: any[] = await res.data;
+    return listRes.map((e) => createPostFromResponse(e));
+  } catch (e) {
+    console.log("Error occured during fetching posts: ", e);
+    return [];
   }
 };
 

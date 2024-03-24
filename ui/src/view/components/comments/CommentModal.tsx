@@ -85,13 +85,12 @@ const CommentFormModal: React.FC<CommentFormModalProps> = ({
 };
 
 const ModalComment: React.FC<{ comment?: Comment }> = ({ comment }) => {
-  const [formValues, setFormValues] = useState<CommentValues>();
   const [open, setOpen] = useState(false);
   const { postId } = useParams();
 
   const onCreate = (values: CommentValues) => {
     console.log("Received values of form: ", values);
-    setFormValues(values);
+
     setOpen(false);
   };
 
@@ -105,7 +104,7 @@ const ModalComment: React.FC<{ comment?: Comment }> = ({ comment }) => {
       <Button type="primary" onClick={() => setOpen(true)} style={buttonStyle}>
         {title}
       </Button>
-      {/* <pre>{JSON.stringify(formValues, null, 2)}</pre> */}
+
       <CommentFormModal
         open={open}
         onCreate={onCreate}
